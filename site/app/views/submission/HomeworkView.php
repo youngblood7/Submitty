@@ -725,7 +725,7 @@ class HomeworkView extends AbstractView {
 
     /**
      * @param GradedGradeable $graded_gradeable
-     * @param bool $can_inquirye
+     * @param bool $can_inquiry
      * @return string
      */
     public function showRegradeDiscussion(GradedGradeable $graded_gradeable, bool $can_inquiry): string {
@@ -834,6 +834,7 @@ class HomeworkView extends AbstractView {
             'g_id' =>$graded_gradeable->getGradeable()->getId(),
             'regrade_message' => $regrade_message,
             'can_inquiry' => $can_inquiry,
+            'is_regrade_open' => $graded_gradeable->getGradeable()->isRegradeOpen(),
             'is_grading' => $this->core->getUser()->accessGrading(),
             'grade_inquiry_per_component_allowed' => $grade_inquiry_per_component_allowed,
             'gradeable_components' => $components_twig_array,
