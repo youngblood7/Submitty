@@ -8,9 +8,15 @@
     cursor: default;
 }
 
+.pdfViewer {
+    display: flex;
+    flex-direction: column;
+}
+
 .pdfViewer .canvasWrapper {
     box-shadow: 0 0 3px var(--standard-light-medium-gray);
 }
 .pdfViewer .page {
-    margin-bottom: 10px;
+    margin: 5px auto !important;
+    border: none !important;
 }

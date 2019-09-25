@@ -2455,7 +2455,7 @@ function scrollToPage(page_num){
     for(let i = 0; i < files.length; i++){
         let zoom = parseInt(localStorage.getItem('scale')) || 1;
         if(files[i].innerText.trim() == "upload.pdf"){
-            let page1 = $(".page").filter(":first");
+            let page1 = $("#pageContainer1");
             // default to 0 if no pages
             let page_height = 0;
             let page_margin_top = 0;
@@ -2463,8 +2463,6 @@ function scrollToPage(page_num){
             if (page1.length) {
                 //get css attr, remove 'px' :
                 page_height = parseInt(page1.css("height").slice(0, -2));
-                page_margin_top = parseInt(page1.css("margin-top").slice(0, -2));
-                page_margin_bot = parseInt(page1.css("margin-bottom").slice(0, -2));
             }
             // assuming margin-top < margin-bot: it overlaps on all pages but 1st so we add it once
             let scrollY = (page_num-1)*(page_height+page_margin_bot)+page_margin_top;
