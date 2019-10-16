@@ -476,6 +476,9 @@ HTML;
             }
 
             //Team edit button, specifically the onclick event.
+            /**
+            *TODO: WORK ON NULL SECTION VIEW TO MAKE SURE TEAMS DON'T DISAPPEAR.
+            */
             if ($gradeable->isTeamAssignment()) {
                 $reg_section = ($row->getSubmitter()->getRegistrationSection() === null) ? "NULL" : $row->getSubmitter()->getRegistrationSection();
                 $rot_section = ($row->getSubmitter()->getRotatingSection() === null) ? "NULL" : $row->getSubmitter()->getRotatingSection();
