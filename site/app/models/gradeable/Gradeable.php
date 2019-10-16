@@ -1143,6 +1143,9 @@ class Gradeable extends AbstractModel {
      * @return Team[]
      */
     public function getTeams() {
+        /**
+        *TODO: Add ID to this, for null section grading.
+        */
         if($this->teams === null) {
             $this->teams = $this->core->getQueries()->getTeamsByGradeableId($this->getId());
         }
