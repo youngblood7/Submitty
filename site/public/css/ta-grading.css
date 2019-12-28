@@ -78,6 +78,12 @@
     background-color: var(--standard-mint-green);
 }
 
+.icon-selected.fa-users {
+    box-shadow: 0px 0px 3px 3px var(--standard-vibrant-purple);
+    background-color: var(--standard-vibrant-purple);
+}
+
+
 .icon-selected.fa-comment-alt {
     box-shadow: 0px 0px 3px 3px var(--standard-plum-purple);
     background-color: var(--standard-plum-purple);
@@ -198,6 +204,9 @@ progress::-webkit-progress-value {
 }
 #regrade_info.rubric_panel {
     border:5px solid var(--standard-vibrant-orange);
+}
+#peer_results.rubric_panel {
+    border:5px solid var(--standard-vibrant-purple);
 }
 #student_info.rubric_panel {
     border:5px solid var(--text-black);

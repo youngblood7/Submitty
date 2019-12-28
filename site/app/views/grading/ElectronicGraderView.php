@@ -709,14 +709,18 @@ HTML;
         if ($this->core->getUser()->getGroup() == User::GROUP_STUDENT && $gradeable->isPeerGrading()) {
             $peer = true;
         }
+        
+        $peer_grading = $gradeable->isPeerGrading();
+        
         $this->core->getOutput()->addVendorJs(FileUtils::joinPaths('mermaid', 'mermaid.min.js'));
 
         $display_version_instance = $graded_gradeable->getAutoGradedGradeable()->getAutoGradedVersionInstance($display_version);
 
         $return = "";
-        $return .= $this->core->getOutput()->renderTemplate(array('grading', 'ElectronicGrader'), 'renderNavigationBar', $graded_gradeable, $progress, $peer, $sort, $direction, $from);
+        $return .= $this->core->getOutput()->renderTemplate(array('grading', 'ElectronicGrader'), 'renderNavigationBar', $graded_gradeable, $progress, $peer, $peer_grading, $sort, $direction, $from);
         $return .= $this->core->getOutput()->renderTemplate(array('grading', 'ElectronicGrader'), 'renderAutogradingPanel', $display_version_instance, $show_hidden_cases);
         $return .= $this->core->getOutput()->renderTemplate(array('grading', 'ElectronicGrader'), 'renderSubmissionPanel', $graded_gradeable, $display_version);
+        $return .= $this->core->getOutput()->renderTemplate(array('grading', 'ElectronicGrader'), 'renderPeerResultsPanel', $graded_gradeable, $display_version);
         //If TA grading isn't enabled, the rubric won't actually show up, but the template should be rendered anyway to prevent errors, as the code references the rubric panel
         $return .= $this->core->getOutput()->renderTemplate(array('grading', 'ElectronicGrader'), 'renderRubricPanel', $graded_gradeable, $display_version, $can_verify, $show_verify_all, $show_silent_edit);
 
@@ -777,7 +781,7 @@ HTML;
      * @param string $direction
      * @return string
      */
-    public function renderNavigationBar(GradedGradeable $graded_gradeable, float $progress, bool $peer, $sort, $direction, $from) {
+    public function renderNavigationBar(GradedGradeable $graded_gradeable, float $progress, bool $peer, bool $peer_grading, $sort, $direction, $from) {
         $home_url = $this->core->buildCourseUrl(['gradeable', $graded_gradeable->getGradeableId(), 'grading', 'details']) . '?' . http_build_query(['sort' => $sort, 'direction' => $direction, 'view' => (count($this->core->getUser()->getGradingRegistrationSections()) == 0) ? 'all' : null ]);
 
         // Setup urls for prev and next students
@@ -791,6 +795,7 @@ HTML;
         return $this->core->getOutput()->renderTwigTemplate("grading/electronic/NavigationBar.twig", [
             "progress" => $progress,
             "peer" => $peer,
+            "peer_grading" => $peer_grading,
             "prev_student_url" => $prev_student_url,
             "prev_ungraded_student_url" => $prev_ungraded_student_url,
             "next_student_url" => $next_student_url,
@@ -914,6 +919,20 @@ HTML;
             "active_version" => $display_version,
             'toolbar_css' => $toolbar_css,
             "display_file_url" => $this->core->buildCourseUrl(['display_file'])
+        ]);
+    }
+    
+        /**
+     * Render the Peer Results Panel
+     * @param GradedGradeable $graded_gradeable
+     * @param int $display_version
+     * @return string
+     */
+    public function renderPeerResultsPanel(GradedGradeable $graded_gradeable, int $display_version) {
+        
+        return $this->core->getOutput()->renderTwigTemplate("grading/electronic/PeerResultsPanel.twig", [
+            "gradeable_id" => $graded_gradeable->getGradeableId(),
+            "anon_id" => $graded_gradeable->getSubmitter()->getAnonId()
         ]);
     }
 
