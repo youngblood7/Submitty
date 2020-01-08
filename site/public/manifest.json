@@ -1,32 +1,28 @@
 {
-  "name": "Submitty-e",
-  "short_name": "Submitty",
-  "start_url": "http://192.168.56.111/offline.html",
-  "scope": "http://192.168.56.111/",
-  "display": "standalone",
-  "background_color": "#F4F4F4",
-  "theme_color": "#F4F4F4",
-  "orientation": "portrait-primary",
-  "icons": [
-    {
-      "src": "/img/moorthy_duck.png",
-      "type": "image/png",
-      "sizes": "3000x3000"
-    },
-    {
-      "src": "/img/moorthy_duck_512.png",
-      "type": "image/png",
-      "sizes": "512x512"
-    },
-    {
-      "src": "/img/moorthy_duck_192.png",
-      "type": "image/png",
-      "sizes": "192x192"
-    },
-    {
-      "src": "/img/submitty_logo.png",
-      "type": "image/png",
-      "sizes": "1716x630"
-    }
-  ]
+	"name" : "Submitty",
+	"short_name" : "Submitty",
+	"description" : "Submitty PWA",
+	"start_url" : "/",
+	"display" : "standalone",
+	"orientation" : "portrait",
+	"lang" : "English",
+	"background_color" : "#DCC308",
+    "theme_color": "#DCC308",
+    "icons": [
+        {
+          "src": "/img/moorthy_duck.png",
+          "type": "image/png",
+          "sizes": "3000x3000"
+        },
+        {
+          "src": "/img/moorthy_duck_512.png",
+          "type": "image/png",
+          "sizes": "512x512"
+        },
+        {
+          "src": "/img/moorthy_duck_192.png",
+          "type": "image/png",
+          "sizes": "192x192"
+        }
+    ]
 }

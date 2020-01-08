@@ -27,9 +27,7 @@
 
 
 
-    <button onclick="install()">
-      Install
-    </button>
+
     <script type="text/javascript">
         //Install button script
         let deferredPrompt = null;
@@ -178,6 +176,9 @@
                         {% endfor %}
                     </div>
                 </div>
+                <button onclick="install()">
+                  Install PWA
+                </button>
                 <div id="duckdiv"
                     {% if enable_banner %}
                         style="position:relative;top:-30px; right:12px;"
