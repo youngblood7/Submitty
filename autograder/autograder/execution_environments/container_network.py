@@ -62,12 +62,8 @@ class Container():
 
     client = docker.from_env()
 
-    mount = {
-        self.directory : {
-          'bind' : self.directory,
-          'mode' : 'rw'
-        }
-      }
+    # Use a delegated bind mount to stop constant syncing from the docker directory to the mounted volume.
+    mount = docker.types.Mount(self.directory, self.directory, type="bind", consistency="delegated")
 
     # Only pass container name to testcases with greater than one container. (Doing otherwise breaks compilation)
     container_name_argument = ['--container_name', self.name] if more_than_one else list()
@@ -76,12 +72,12 @@ class Container():
     try:
       if self.is_server:
         self.container = client.containers.create(self.image, stdin_open = True, tty = True, network = 'none',
-                                                  volumes = mount, working_dir = self.directory, name = self.full_name)
+                                                  mounts = [mount,], working_dir = self.directory, name = self.full_name)
       else:
         container_ulimits = rlimit_utils.build_ulimit_argument(self.container_rlimits, self.image)
         command = [execution_script,] + arguments + container_name_argument
         self.container = client.containers.create(self.image, command = command, ulimits = container_ulimits, stdin_open = True,
-                                                  tty = True, network = 'none', user = self.container_user_argument, volumes=mount,
+                                                  tty = True, network = 'none', user = self.container_user_argument, mounts = [mount,],
                                                   working_dir = self.directory, hostname = self.name, name = self.full_name)
     except docker.errors.ImageNotFound:
       self.log_function(f'ERROR: The image {self.image} is not available on this worker')
