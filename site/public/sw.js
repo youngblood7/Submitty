@@ -1,8 +1,5 @@
-// This is the "Offline page" service worker
-//This code was made with the help of https://www.pwabuilder.com/serviceworker
 const CACHE = "offline-page-chache";
 
-// TODO: replace the following with the correct offline fallback page i.e.: const offlineFallbackPage = "offline.html";
 const offlineFallbackPage = "offline.html";
 
 // Install stage sets up the offline page in the cache and opens a new cache
@@ -12,7 +9,7 @@ self.addEventListener("install", function (event) {
   event.waitUntil(
     caches.open(CACHE).then(function (cache) {
       console.log("[PWA] Cached offline page during install");
-      return cache.add(offlineFallbackPage);
+      return cache.add("offline.html");
     })
   );
 });
@@ -37,16 +34,4 @@ self.addEventListener("fetch", function (event) {
       });
     })
   );
-});
-
-// This is an event that can be fired from your page to tell the SW to update the offline page
-self.addEventListener("refreshOffline", function () {
-  const offlinePageRequest = new Request(offlineFallbackPage);
-
-  return fetch(offlineFallbackPage).then(function (response) {
-    return caches.open(CACHE).then(function (cache) {
-      console.log("[PWA] Offline page updated from refreshOffline event: " + response.url);
-      return cache.put(offlinePageRequest, response);
-    });
-  });
 });

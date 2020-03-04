@@ -1,13 +1,13 @@
 {
 	"name" : "Submitty",
 	"short_name" : "Submitty",
-	"description" : "Submitty PWA",
+	"description" : "Submitty progressive web app",
 	"start_url" : "/",
 	"display" : "standalone",
 	"orientation" : "portrait",
 	"lang" : "English",
-	"background_color" : "#DCC308",
-    "theme_color": "#DCC308",
+	"background_color" : "#006398",
+    "theme_color": "#006398",
     "icons": [
         {
           "src": "/img/moorthy_duck.png",
