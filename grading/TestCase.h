@@ -38,7 +38,7 @@ public:
 
   // -------------------------------
   // CONSTRUCTOR
-  TestCase (nlohmann::json &whole_config, int which_testcase, std::string container_name);
+  TestCase (nlohmann::json &whole_config, int which_testcase, std::string container_name, int offset = 0);
 
   // -------------------------------
   // ACCESSORS

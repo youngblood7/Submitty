@@ -92,6 +92,35 @@ void executeSetOfCommands(std::vector<std::string> setOfCommands,
   }
 }
 
+void runATestCase(TestCase &my_testcase, nlohmann::json &config_json, nlohmann::json::iterator &tc, int which_testcase, const std::string &docker_name, int test_case_to_run, const std::string &generation_type, bool windowed, const std::string &display_variable, int offset) {
+    std::vector<std::string> commands;
+    std::vector<nlohmann::json> actions;
+    std::vector<nlohmann::json> dispatcher_actions;
+    
+    if (my_testcase.isFileCheck() || my_testcase.isCompilation()){
+      return;
+    }
+
+    if(test_case_to_run != -1 &&  test_case_to_run != which_testcase){
+      return;
+    }
+
+    if ( generation_type == "input" ) {
+      commands = my_testcase.getInputGeneratorCommands();
+    } else {
+      commands = (generation_type == "output" ? my_testcase.getSolutionCommands() : my_testcase.getCommands());
+      //using getID here since nothing else here uses it - should it be made a bit more clear?
+      actions  = mapOrArrayOfMaps((*tc)[which_testcase - offset],"actions");
+      dispatcher_actions = mapOrArrayOfMaps((*tc)[which_testcase - offset],"dispatcher_actions");
+
+      if(generation_type != "output"){
+        assert (commands.size() > 0);
+      }
+    }
+
+    executeSetOfCommands(commands, actions, dispatcher_actions, windowed, display_variable, my_testcase, "execute_logfile.txt", config_json, which_testcase);
+}
+
 int main(int argc, char *argv[]) {
   std::cout << "Running User Code..." << std::endl;
   std::string hw_id = "";
@@ -158,46 +187,65 @@ int main(int argc, char *argv[]) {
   }
 
   nlohmann::json::iterator tc = config_json.find("testcases");
-  assert (tc != config_json.end());
-
+  nlohmann::json::iterator ic = config_json.find("item_pool");
+  //TODO: Do we want to check if there are actually test cases in the item pool earlier (or maybe have a method to print the message on the first run of a test case in general)?
+  //(to avoid misleading message)
+  assert (tc != config_json.end() || ic != config_json.end());
+  std::cout << "Test statement" << std::endl;
   if(test_case_to_run != -1){
     //testcases begin counting at 1 and end at tc->size()
     assert (test_case_to_run <= tc->size());
   }else{
     std::cout << "Running all testcases in a single run." << std::endl;
   }
-
-  for (unsigned int which_testcase = 1; which_testcase <= tc->size(); which_testcase++) {
-
-    TestCase my_testcase(config_json, which_testcase-1, docker_name);
-    std::vector<std::string> commands;
-    std::vector<nlohmann::json> actions;
-    std::vector<nlohmann::json> dispatcher_actions;
-    
-    if (my_testcase.isFileCheck() || my_testcase.isCompilation()){
-      continue;
+  unsigned int which_testcase;
+  if(tc != config_json.end()) {
+    for (which_testcase = 1; which_testcase <= tc->size(); which_testcase++) {
+      TestCase my_testcase(config_json, which_testcase-1, docker_name);
+      runATestCase(my_testcase, config_json, 
+                  tc, which_testcase, 
+                  docker_name, 
+                  test_case_to_run, 
+                  generation_type, 
+                  windowed, display_variable, 0);
     }
-
-    if(test_case_to_run != -1 &&  test_case_to_run != which_testcase){
-      continue;
-    }
-
-    if ( generation_type == "input" ) {
-      commands = my_testcase.getInputGeneratorCommands();
-    } else {
-      commands = (generation_type == "output" ? my_testcase.getSolutionCommands() : my_testcase.getCommands());
-
-      actions  = mapOrArrayOfMaps((*tc)[which_testcase-1],"actions");
-      dispatcher_actions = mapOrArrayOfMaps((*tc)[which_testcase-1],"dispatcher_actions");
-
-      if(generation_type != "output"){
-        assert (commands.size() > 0);
+  }
+  if(ic != config_json.end()) { //do we want to enforce randomization here?
+    unsigned int offset = which_testcase;
+    nlohmann::json::iterator notebook = config_json.find("notebook");
+    std::map<std::string, int> selectedItems;
+    if(notebook != config_json.end()) { //should this be an assert instead since we should only have items if we have items in a notebook?
+      for(unsigned int x = 0; x < notebook->size(); x++) {
+        if((*notebook)[x]["type"] == "item" && (*notebook)[x].find("points") != notebook->end()) { //we never grab points from test cases, right?
+          nlohmann::json::iterator pool = notebook->find("from_pool");
+          assert(pool != notebook->end());
+          //just to make sure, do we actually want to enforce randomization here?
+          //also, would this be better as a method since we use identical code in main_validator?
+          //TODO: RANDOMALLY SELECT HERE
+          int result = 0;
+          std::string name = (*pool)[result];
+          selectedItems.insert({name, (*notebook)[x]["points"]});
+        }
+      }
+      for (unsigned int i = 0; i < ic->size(); i++) {
+        std::string item_name = (*ic)[i]["item_name"];
+        if(selectedItems.find(item_name) != selectedItems.end()) {
+          tc = ic->find("testcases");
+          for(unsigned int x = 0; x < tc->size(); x++) {
+            //no points here because this doesn't appear to check points
+            TestCase my_testcase((*ic)[i], which_testcase, docker_name, offset);
+            runATestCase(my_testcase, config_json, 
+                         tc, which_testcase++, 
+                         docker_name, 
+                         test_case_to_run, 
+                         generation_type, 
+                         windowed, display_variable, offset);
+          }
+        }
       }
     }
-
-    executeSetOfCommands(commands, actions, dispatcher_actions, windowed, display_variable, my_testcase, "execute_logfile.txt", config_json, which_testcase);
-
   }
+
   return 0;
 }
 

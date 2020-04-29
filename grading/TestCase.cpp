@@ -238,8 +238,8 @@ TestResults* TestCase::dispatch(const nlohmann::json& grader, int autocheck_numb
 // =================================================================================
 // CONSTRUCTOR
 
-TestCase::TestCase(nlohmann::json &whole_config, int which_testcase, std::string docker_name) :
-  _json((*whole_config.find("testcases"))[which_testcase]), CONTAINER_NAME(docker_name) {
+TestCase::TestCase(nlohmann::json &whole_config, int which_testcase, std::string docker_name, int offset) :
+  _json((*whole_config.find("testcases"))[which_testcase - offset]), CONTAINER_NAME(docker_name) {
 
   test_case_id = which_testcase + 1;
 }

@@ -306,10 +306,10 @@ void ValidateATestCase(nlohmann::json config_json, int which_testcase,
                        int &nonhidden_automated_points_possible,
                        nlohmann::json &all_testcases,
                        std::ofstream& gradefile,
-                       const std::string& username) {
+                       const std::string& username, int offset) {
     //This input to the testcase constructor does nothing unless we attempt to access the 'commands' object.
     std::string container_name = "";
-    TestCase my_testcase(config_json,which_testcase,container_name);
+    TestCase my_testcase(config_json,which_testcase,container_name, offset);
     std::string title = "Test " + std::to_string(which_testcase+1) + " " + my_testcase.getTitle();
     int possible_points = my_testcase.getPoints();
     bool allow_partial_credit = my_testcase.allowPartialCredit();
@@ -413,23 +413,69 @@ int validateTestCases(const std::string &hw_id, const std::string &rcsid, int su
 
   system("find . -type f -exec ls -sh {} +");
 
-
   // =======================================
   // LOOP OVER ALL TEST CASES
   nlohmann::json::iterator tc = config_json.find("testcases");
-  assert (tc != config_json.end());
-  for (unsigned int i = 0; i < tc->size(); i++) {
-    std::cout << "------------------------------------------\n";
-    ValidateATestCase(config_json, i, 
-                      subnum,hw_id,
-                      automated_points_awarded,
-                      automated_points_possible,
-                      nonhidden_automated_points_awarded,
-                      nonhidden_automated_points_possible,
-                      all_testcases,
-                      gradefile,
-                      rcsid);
+  nlohmann::json::iterator ic = config_json.find("item_pool");
+
+  assert (tc != config_json.end() || ic != config_json.end());
+  unsigned int i = 0;
+  if(tc != config_json.end()) {
+    for (i = 0; i < tc->size(); i++) {
+      std::cout << "------------------------------------------\n";
+      ValidateATestCase(config_json, i, 
+                        subnum,hw_id,
+                        automated_points_awarded,
+                        automated_points_possible,
+                        nonhidden_automated_points_awarded,
+                        nonhidden_automated_points_possible,
+                        all_testcases,
+                        gradefile,
+                        rcsid, 0);
+    }
   }
+
+  if(ic != config_json.end()) {
+    unsigned int offset = i;
+    nlohmann::json::iterator notebook = config_json.find("notebook");
+    std::map<std::string, int> selectedItems;
+    if(notebook != config_json.end()) { //should this be an assert instead since we should only have items if we have items in a notebook?
+      for(unsigned int x = 0; x < notebook->size(); x++) {
+        if((*notebook)[x]["type"] == "item" && (*notebook)[x].find("points") != notebook->end()) { //we never grab points from test cases, right?
+          nlohmann::json::iterator pool = notebook->find("from_pool");
+          assert(pool != notebook->end());
+          //TODO: RANDOMALLY SELECT HERE
+          int result = 0;
+          std::string name = (*pool)[result];
+          selectedItems.insert({name, (*notebook)[x]["points"]});
+        }
+      }
+      for (unsigned int x = 0; x < ic->size(); x++) {
+        std::string item_name = (*ic)[x]["item_name"];
+        if(selectedItems.find(item_name) != selectedItems.end()) {
+          tc = ic->find("testcases");
+          //do we want to validate the number of points in the test case here?
+          for(unsigned int z = 0; z < tc->size(); z++) {
+            if(tc[z].find("points") == tc->end()) {
+              tc[z]["points"] = selectedItems[item_name];
+            }
+            std::cout << "------------------------------------------\n";
+                ValidateATestCase((*ic)[x], i++, 
+                          subnum,hw_id,
+                          automated_points_awarded,
+                          automated_points_possible,
+                          nonhidden_automated_points_awarded,
+                          nonhidden_automated_points_possible,
+                          all_testcases,
+                          gradefile,
+                          rcsid, offset);
+          }
+        }
+      }
+    }
+    
+  }
+
 
   nlohmann::json grading_parameters = config_json.value("grading_parameters",nlohmann::json::object());
   int AUTO_POINTS         = grading_parameters.value("AUTO_POINTS",automated_points_possible);
