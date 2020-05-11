@@ -441,26 +441,28 @@ int validateTestCases(const std::string &hw_id, const std::string &rcsid, int su
     std::map<std::string, int> selectedItems;
     if(notebook != config_json.end()) { //should this be an assert instead since we should only have items if we have items in a notebook?
       for(unsigned int x = 0; x < notebook->size(); x++) {
-        if((*notebook)[x]["type"] == "item" && (*notebook)[x].find("points") != notebook->end()) { //we never grab points from test cases, right?
-          nlohmann::json::iterator pool = notebook->find("from_pool");
-          assert(pool != notebook->end());
+        nlohmann::json notebookItem = (*notebook)[x];
+        if(notebookItem["type"] == "item" && notebookItem.find("points") != notebookItem.end()) { //we never grab points from test cases, right?
+          nlohmann::json pool = notebookItem["from_pool"];
           //TODO: RANDOMALLY SELECT HERE
           int result = 0;
-          std::string name = (*pool)[result];
-          selectedItems.insert({name, (*notebook)[x]["points"]});
+          std::string name = pool[result];
+          selectedItems.insert({name, notebookItem["points"]});
         }
       }
       for (unsigned int x = 0; x < ic->size(); x++) {
-        std::string item_name = (*ic)[x]["item_name"];
+        nlohmann::json item = (*ic)[x];
+        assert(item.find("item_name") != item.end());
+        std::string item_name = item["item_name"];
         if(selectedItems.find(item_name) != selectedItems.end()) {
-          tc = ic->find("testcases");
+          tc = item.find("testcases");
           //do we want to validate the number of points in the test case here?
           for(unsigned int z = 0; z < tc->size(); z++) {
-            if(tc[z].find("points") == tc->end()) {
-              tc[z]["points"] = selectedItems[item_name];
+            if((*tc)[z].find("points") == (*tc)[z].end()) {
+              (*tc)[z]["points"] = selectedItems[item_name];
             }
             std::cout << "------------------------------------------\n";
-                ValidateATestCase((*ic)[x], i++, 
+                ValidateATestCase(item, i++, 
                           subnum,hw_id,
                           automated_points_awarded,
                           automated_points_possible,

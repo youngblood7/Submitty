@@ -210,40 +210,41 @@ int main(int argc, char *argv[]) {
                   windowed, display_variable, 0);
     }
   }
-  if(ic != config_json.end()) { //do we want to enforce randomization here?
+
+  if(ic != config_json.end()) {
     unsigned int offset = which_testcase;
     nlohmann::json::iterator notebook = config_json.find("notebook");
-    std::map<std::string, int> selectedItems;
+    std::set<std::string> selectedItems;
     if(notebook != config_json.end()) { //should this be an assert instead since we should only have items if we have items in a notebook?
       for(unsigned int x = 0; x < notebook->size(); x++) {
-        if((*notebook)[x]["type"] == "item" && (*notebook)[x].find("points") != notebook->end()) { //we never grab points from test cases, right?
-          nlohmann::json::iterator pool = notebook->find("from_pool");
-          assert(pool != notebook->end());
-          //just to make sure, do we actually want to enforce randomization here?
-          //also, would this be better as a method since we use identical code in main_validator?
+        nlohmann::json notebookItem = (*notebook)[x];
+        if(notebookItem["type"] == "item" && notebookItem.find("points") != notebookItem.end()) { //we never grab points from test cases, right?
+          nlohmann::json pool = notebookItem["from_pool"];
           //TODO: RANDOMALLY SELECT HERE
           int result = 0;
-          std::string name = (*pool)[result];
-          selectedItems.insert({name, (*notebook)[x]["points"]});
+          std::string name = pool[result];
+          selectedItems.insert(name);
         }
       }
-      for (unsigned int i = 0; i < ic->size(); i++) {
-        std::string item_name = (*ic)[i]["item_name"];
-        if(selectedItems.find(item_name) != selectedItems.end()) {
-          tc = ic->find("testcases");
-          for(unsigned int x = 0; x < tc->size(); x++) {
-            //no points here because this doesn't appear to check points
-            TestCase my_testcase((*ic)[i], which_testcase, docker_name, offset);
+      for (unsigned int x = 0; x < ic->size(); x++) {
+        nlohmann::json item = (*ic)[x];
+        assert(item.find("item_name") != item.end());
+        if(selectedItems.find(item["item_name"]) != selectedItems.end()) {
+          tc = item.find("testcases");
+          //do we want to validate the number of points in the test case here?
+          for(unsigned int z = 0; z < tc->size(); z++) {
+            TestCase my_testcase((*ic)[x], which_testcase - 1, docker_name, offset);
             runATestCase(my_testcase, config_json, 
-                         tc, which_testcase++, 
-                         docker_name, 
-                         test_case_to_run, 
-                         generation_type, 
-                         windowed, display_variable, offset);
+                          tc, which_testcase++, 
+                          docker_name, 
+                          test_case_to_run, 
+                          generation_type, 
+                          windowed, display_variable, offset);
           }
         }
       }
     }
+    
   }
 
   return 0;
