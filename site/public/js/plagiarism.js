@@ -159,9 +159,7 @@ function requestAjaxData(url, f, es) {
 
 function createRightUsersList(data, select = null) {
     var position = 0;
-    if (select == null) {
-        var append_options='<option value="">None</option>';
-    }
+    var append_options='<option value="">None</option>';
     $.each(data, function(i,users){
         append_options += '<option value="{&#34;user_id&#34;:&#34;'+ users[0]+'&#34;,&#34;version&#34;:'+ users[1] +'}"';
         if (select == users[0]) {
@@ -173,7 +171,7 @@ function createRightUsersList(data, select = null) {
         append_options += users[2]+ ' '+users[3]+' &lt;'+users[0]+'&gt; (version:'+users[1]+')</option>';
     });
     $('[name="user_id_2"]', form).find('option').remove().end().append(append_options).val('');
-    $('[name="user_id_2"] option:eq(' + position.toString() + ')', form).prop('selected', true);
+    $('[name="user_id_2"] option', form).eq(position).prop('selected', true);
 }
 
 function createLeftUserVersionDropdown(version_data, active_version_user_1, max_matching_version, code_version_user_1) {
@@ -258,4 +256,3 @@ function setCodeInEditor(changed) {
         }
     }
 }
-

@@ -47,6 +47,8 @@ use app\libraries\FileUtils;
  * @method bool isEmailEnabled()
  * @method string getRegradeMessage()
  * @method string getVcsBaseUrl()
+ * @method string getSysAdminEmail()
+ * @method string getSysAdminUrl()
  * @method string getCourseEmail()
  * @method string getVcsUser()
  * @method string getVcsType()
@@ -58,11 +60,15 @@ use app\libraries\FileUtils;
  * @method string getAutoRainbowGrades()
  * @method string|null getVerifiedSubmittyAdminUser()
  * @method bool isQueueEnabled()
+ * @method bool getQueueContactInfo()
  * @method void setSemester(string $semester)
  * @method void setCourse(string $course)
  * @method void setCoursePath(string $course_path)
  * @method void setSubmittyPath(string $submitty_path)
  * @method void setDebug(bool $debug)
+ * @method string getQueueMessage()
+ * @method string getSubmittyInstallPath()
+ * @method bool isDuckBannerEnabled()
  */
 
 class Config extends AbstractModel {
@@ -151,6 +157,20 @@ class Config extends AbstractModel {
      */
     protected $course_code_requirements = "";
 
+    /**
+     * Email address of the System Administration
+     * @var string
+     * @prop
+     */
+    protected $sys_admin_email = "";
+
+    /**
+     * Webpage URL for a help page (not hosted by submitty).
+     * @var string
+     * @prop
+     */
+    protected $sys_admin_url = "";
+
     /** @prop @var string Text shown to all users for system announcement */
     protected $system_message = '';
 
@@ -218,6 +238,17 @@ class Config extends AbstractModel {
     protected $verified_submitty_admin_user = null;
     /** @prop @var bool */
     protected $queue_enabled;
+    /** @prop @var bool */
+    protected $queue_contact_info;
+    /** @prop @var string */
+    protected $queue_message;
+    /** @prop @var string */
+    protected $submitty_install_path;
+    /** @prop @var bool */
+    protected $duck_banner_enabled;
+
+    /** @prop-read @var array */
+    protected $feature_flags = [];
 
     /**
      * Config constructor.
@@ -260,11 +291,13 @@ class Config extends AbstractModel {
             throw new ConfigException("Could not find submitty config: {$this->config_path}/submitty.json");
         }
 
-        $this->submitty_log_path = $submitty_json['site_log_path'];
         $this->log_exceptions = true;
 
         $this->base_url = $submitty_json['submission_url'];
-        $this->submitty_path = $submitty_json['submitty_data_dir'];
+        $this->duck_banner_enabled = $submitty_json['duck_special_effects'] === true;
+
+        $this->sys_admin_email = $submitty_json['sys_admin_email'] ?? '';
+        $this->sys_admin_url = $submitty_json['sys_admin_url'] ?? '';
 
         if (isset($submitty_json['timezone'])) {
             if (!in_array($submitty_json['timezone'], \DateTimeZone::listIdentifiers())) {
@@ -309,10 +342,14 @@ class Config extends AbstractModel {
             $this->vcs_url = rtrim($submitty_json['vcs_url'], '/') . '/';
         }
 
+        $this->submitty_path = $submitty_json['submitty_data_dir'];
+        $this->submitty_log_path = $submitty_json['site_log_path'];
+        $this->submitty_install_path = $submitty_json['submitty_install_dir'];
+
         $this->cgi_tmp_path = FileUtils::joinPaths($this->submitty_path, "tmp", "cgi");
 
         // Check that the paths from the config file are valid
-        foreach (array('submitty_path', 'submitty_log_path') as $path) {
+        foreach (array('submitty_path', 'submitty_log_path', 'submitty_install_path') as $path) {
             if (!is_dir($this->$path)) {
                 throw new ConfigException("Invalid path for setting {$path}: {$this->$path}");
             }
@@ -394,7 +431,7 @@ class Config extends AbstractModel {
             'zero_rubric_grades', 'upload_message', 'display_rainbow_grades_summary',
             'display_custom_message', 'room_seating_gradeable_id', 'course_email', 'vcs_base_url', 'vcs_type',
             'private_repository', 'forum_enabled', 'forum_create_thread_message', 'regrade_enabled', 'seating_only_for_instructor',
-            'regrade_message', 'auto_rainbow_grades', 'queue_enabled'
+            'regrade_message', 'auto_rainbow_grades', 'queue_enabled', 'queue_contact_info', 'queue_message'
         ];
         $this->setConfigValues($this->course_json, 'course_details', $array);
 
@@ -416,9 +453,13 @@ class Config extends AbstractModel {
         }
 
         $array = array('zero_rubric_grades', 'display_rainbow_grades_summary',
-            'display_custom_message', 'forum_enabled', 'regrade_enabled', 'seating_only_for_instructor', "queue_enabled");
+            'display_custom_message', 'forum_enabled', 'regrade_enabled', 'seating_only_for_instructor', "queue_enabled", 'queue_contact_info');
         foreach ($array as $key) {
             $this->$key = ($this->$key == true) ? true : false;
+        }
+
+        if (!empty($this->course_json['feature_flags']) && is_array($this->course_json['feature_flags'])) {
+            $this->feature_flags = $this->course_json['feature_flags'];
         }
 
         $wrapper_files_path = FileUtils::joinPaths($this->getCoursePath(), 'site');
@@ -508,5 +549,18 @@ class Config extends AbstractModel {
     public function getWrapperFiles() {
         //Return empty if not logged in because we can't access them
         return ($this->core->getUser() === null ? [] : $this->wrapper_files);
+    }
+
+    /**
+     * Checks to see if a given feature flag is enabled or not. If the site
+     * is running under debug, we assume all flags are enabled, else, the
+     * flag must exist in the course config.json file and be set to true.
+     */
+    public function checkFeatureFlagEnabled(string $flag): bool {
+        return $this->debug
+            || (
+                isset($this->feature_flags[$flag])
+                && $this->feature_flags[$flag] === true
+            );
     }
 }

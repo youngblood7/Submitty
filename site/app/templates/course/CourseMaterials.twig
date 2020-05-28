@@ -73,26 +73,11 @@
 {% macro display_file(self, dir, fileReleaseDates, path, id, indent, title, userGroup, inDir, display_file_url, user_section, file_sections, hide_from_students) %}
     {% set this_file_section = file_sections[path] %}
     {% set this_hide_from_students = hide_from_students[path] %}
-    <script>
-
-        function editCourseMaterialsInitialization(this_file_section, this_hide_from_students, dir, release_time){
-
-            if (this_file_section != null) {
-                newEditCourseMaterialsForm(dir ,this_file_section, this_hide_from_students, release_time);
-            }
-
-            else {
-              newEditCourseMaterialsForm(dir ,this_file_section, this_hide_from_students, release_time); 
-            }
-
-        }
-
-    </script>
     {% if userGroup != 4 or this_file_section is null or (this_hide_from_students == "off" and user_section in this_file_section)%}
     <div class="file-container">
         <div class="file-viewer">
 
-            <k class="fas fa-file" style='vertical-align:text-bottom;'></k>
+            <i class="fas fa-file" style='vertical-align:text-bottom;'></i>
             {{ dir }}&nbsp;
             {% set dirExtension = dir|split('.')|last|lower %}
             {% if '.' ~ dirExtension in ['.pdf', '.jpg', '.jpeg', '.c', '.cpp', '.s', '.twig', '.py', '.java', '.png', '.txt', '.h', '.html', '.php', '.js', '.sql', '.sh', '.md', '.csv', '.salsa', '.erl', '.oz', '.pl', '.hs', '.gif'] %}
@@ -101,24 +86,24 @@
             <a class="key_to_click" onclick='downloadFile("{{ path | url_encode }}", "course_materials")' aria-label="Download {{ dir }}" tabindex="0"><i class="fas fa-download" title="Download the file"></i></a>
             {% if userGroup == 1 %}
 
-               <a class="key_to_click" tabindex="0" onclick='editCourseMaterialsInitialization({{this_file_section|json_encode|raw}}, "{{this_hide_from_students}}", "{{ dir }}", "{{ fileReleaseDates[path]}}")'> <i class="fas fa-pencil-alt black-btn" aria-hidden="true" style="font-size: 16px; margin: 5px;"></i></a>
+               <a class="key_to_click" tabindex="0" onclick='newEditCourseMaterialsForm("{{ path }}", {{this_file_section|json_encode|raw}}, "{{this_hide_from_students}}", "{{ fileReleaseDates[path]}}")'> <i class="fas fa-pencil-alt black-btn" aria-hidden="true" style="font-size: 16px; margin: 5px;"></i></a>
 
                <a class="key_to_click" tabindex="0" onclick='newDeleteCourseMaterialForm("{{ path | url_encode }}", "{{ dir }}");' aria-label="Delete {{ dir }}"> <i class="fas fa-trash" title="Delete the file" style="font-size: 16px; margin: 5px;"></i></a>
                 <label for="date_to_release_{{ id }}">Share to student on</label>
                 <input name="release_date" id="date_to_release_{{ id }}" class="date_picker" type="text" size="26"  value="{{ fileReleaseDates[path]}}"/>
                 {% if not(this_file_section is null) %}
                     {% if this_hide_from_students == "on" %}
-                        <label>Sections (Hidden):
+                        <span>Sections (Hidden):
                         {{this_file_section|join(',')}}
-                        </label>
+                        </span>
                     {% else %}
-                        <label>Sections:
+                        <span>Sections:
                         {{this_file_section|join(',')}}
-                        </label>
+                        </span>
                     {% endif %}
 
                 {% endif %}
-                
+
                 <script>
 
                     function determineRelease(inputID){
@@ -137,14 +122,17 @@
                         //based on the time chosen
                         var inputDT = document.getElementById(inputID);
                         var fileDT = inputDT.value;
+
+                        fileDT = fileDT.replace(/\s/, 'T');
+                        currentDT = currentDT.replace(/\s/, 'T');
+                        neverDT = neverDT.replace(/\s/, 'T');
+
                         //also custom colors for this page for readability
-                        if(new Date(fileDT).getTime()<=new Date(currentDT).getTime()){
+                        if(new Date(fileDT).getTime() <= new Date(currentDT).getTime()){
                             return green;
-                        }
-                        else if(new Date(fileDT).getTime()>=new Date(neverDT).getTime()){
+                        } else if(new Date(fileDT).getTime() >= new Date(neverDT).getTime()){
                             return red;
-                        }
-                        else{
+                        } else {
                             return yellow;
                         }
 
@@ -189,10 +177,14 @@
                     enableSeconds: true,
                     time_24hr: true,
                     dateFormat: "Y-m-d H:i:S",
+                    onReady: (a, b, fp) => {
+                      fp.calendarContainer.firstChild.childNodes[1].firstChild.firstChild.setAttribute('aria-label', 'Month');
+                      fp.calendarContainer.childNodes[2].childNodes[4].firstChild.setAttribute('aria-label', 'Seconds');
+                    },
                     onOpen: handleTimeZones('{{ core.getConfig().getTimezone().getName() }}'),
                     onClose: function() {
                                             setNewDateTime('date_to_release_{{ id }}', '{{ path }}');
-                                            determineRelease('date_to_release_{{ id }}');
+                                            changePermission('{{ path }}','1');
                                          }
                     });
                 </script>
@@ -218,7 +210,7 @@
             </a>
             <a onclick='downloadCourseMaterialZip("{{ dir }}", "{{ folderPath | url_encode }}")' aria-label="Download the folder: {{ dir }}" class="key_to_click" tabindex="0"><i class="fas fa-download" title="Download the folder"></i></a>
             {% if userGroup == 1 %}
-                <a class="key_to_click" tabindex="0" onclick='editCourseMaterialsInitialization({{this_file_section|json_encode|raw}}, "{{this_hide_from_students}}", "{{dir}}", "{{ fileReleaseDates[path]}}")'> <i class="fas fa-pencil-alt black-btn" aria-hidden="true" style="font-size: 16px; margin: 5px;"></i></a>
+                <a class="key_to_click" tabindex="0" onclick='newEditCourseMaterialsForm("{{ folderPath }}", {{ this_file_section|json_encode|raw}}, "{{this_hide_from_students}}", "{{ fileReleaseDates[path]}}")'> <i class="fas fa-pencil-alt black-btn" aria-hidden="true" style="font-size: 16px; margin: 5px;"></i></a>
                 <a class="key_to_click" tabindex="0" onclick='newDeleteCourseMaterialForm("{{ folderPath | url_encode  }}", "{{ dir }}");'> <i class="fas fa-trash" aria-hidden="true" style="font-size: 16px; margin: 5px;"></i></a>
                 {# button to choose release date for all files in folder and subfolders #}
                 <a onclick='setFolderRelease("{{ folderPath }}","{{ fileReleaseDates[folderPath] }}","{{ id }}",
