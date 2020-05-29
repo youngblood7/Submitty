@@ -1,14 +1,6 @@
 @import url("reset.css");
 @import url("google/inconsolata.css");
 
-:root {
-    --viewed_content: #e8f0f7;
-}
-
-[data-theme="dark"] {
-    --viewed_content: #313335;
-}
-
 a, a:hover, a:link, a:visited {
     cursor: pointer;
 }
@@ -602,7 +594,7 @@ td>a.active-sort {
 }
 
 .new_post {
-    background-color: var(--viewed_content);
+    background-color: var(--viewed_content)!important;
 }
 
 .important {
@@ -1442,7 +1434,7 @@ end of styles used in the admin gradeable page
 }
 
 #hotkeys-list tr:nth-child(even) {
-    background-color: var(--standard-pale-gray);
+    background-color: var(--alternating-row-color-light);
 }
 
 #hotkeys-list td {

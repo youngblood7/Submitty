@@ -598,4 +598,5 @@ body {min-width: 925px;}
 [data-theme="dark"] .create_thread_button,
 [data-theme="dark"] .well {
   box-shadow: none;
+  background-color: var(--standard-input-background);
 }

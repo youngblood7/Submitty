@@ -49,7 +49,7 @@ fieldset.mc {
 /* Style the color of notebook feedback messages */
 .notebook .feedback-msg-failure
 {
-    color: var(--badge-backgroud-red);
+    color: var(--error-alert-dark-red);
 }
 
 .notebook .feedback-msg-warning
