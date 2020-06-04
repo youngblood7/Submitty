@@ -222,6 +222,24 @@ class Logger {
         static::logMessage('ta_grading', $log_message);
     }
 
+
+    /**
+     * This logs the grading activity of any graders when they open/close a queue
+     * or modify the state such as changing the name or secred code as well as
+     * if they empty the queue
+     * The log is in the format of
+     * Timestamp | Semester | Course Name | Grader ID | Queue Name | secret_code (blank if not relevant) | action taken | User Agent
+     */
+    public static function logOfficeHoursQueue($params) {
+        $log_message[] = $params['course_semester'];
+        $log_message[] = $params['course_name'];
+        $log_message[] = $params['id'];
+        $log_message[] = $params['queue_name'];
+        $log_message[] = $params['secret_code'];
+        $log_message[] = $params['action'];
+        static::logMessage('office_hours_queue', $log_message);
+    }
+
     private static function logMessage($folder, $log_message) {
         $filename = static::getFilename();
         array_unshift($log_message, static::getTimestamp());

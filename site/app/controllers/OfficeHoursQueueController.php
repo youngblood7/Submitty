@@ -10,6 +10,7 @@ use app\libraries\response\RedirectResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use app\models\OfficeHoursQueueModel;
 use app\libraries\routers\AccessControl;
+use app\libraries\Logger;
 
 /**
  * Class OfficeHoursQueueController
@@ -77,6 +78,15 @@ class OfficeHoursQueueController extends AbstractController {
 
         if ($this->core->getQueries()->openQueue($queue_code, $token)) {
             $this->core->addSuccessMessage("New queue added");
+            $logger_params = array(
+                "course_semester" => $this->core->getConfig()->getSemester(),
+                "course_name" => $this->core->getDisplayedCourseName(),
+                "id" => $this->core->getUser()->getId(),
+                "queue_name" => $queue_code,
+                "secret_code" => $token,
+                "action" => "New Queue",
+            );
+            Logger::logOfficeHoursQueue($logger_params);
         }
         else {
             $this->core->addErrorMessage("Unable to add queue. Make sure you have a unique queue name");
@@ -299,6 +309,17 @@ class OfficeHoursQueueController extends AbstractController {
 
         $this->core->getQueries()->emptyQueue($queue_code);
         $this->core->addSuccessMessage("Queue emptied");
+
+        $logger_params = array(
+            "course_semester" => $this->core->getConfig()->getSemester(),
+            "course_name" => $this->core->getDisplayedCourseName(),
+            "id" => $this->core->getUser()->getId(),
+            "queue_name" => $queue_code,
+            "secret_code" => "",
+            "action" => "Emptied Queue",
+        );
+        Logger::logOfficeHoursQueue($logger_params);
+
         return MultiResponse::RedirectOnlyResponse(
             new RedirectResponse($this->core->buildCourseUrl(['office_hours_queue']))
         );
@@ -326,6 +347,16 @@ class OfficeHoursQueueController extends AbstractController {
         $this->core->getQueries()->toggleQueue($queue_code, $_POST['queue_state']);
         $this->core->addSuccessMessage(($_POST['queue_state'] === "1" ? 'Closed' : 'Opened') . ' queue: "' . $queue_code . '"');
 
+        $logger_params = array(
+            "course_semester" => $this->core->getConfig()->getSemester(),
+            "course_name" => $this->core->getDisplayedCourseName(),
+            "id" => $this->core->getUser()->getId(),
+            "queue_name" => $queue_code,
+            "secret_code" => "",
+            "action" => ($_POST['queue_state'] === "1" ? 'Closed' : 'Opened') . ' queue',
+        );
+        Logger::logOfficeHoursQueue($logger_params);
+
         return MultiResponse::RedirectOnlyResponse(
             new RedirectResponse($this->core->buildCourseUrl(['office_hours_queue']))
         );
@@ -346,6 +377,17 @@ class OfficeHoursQueueController extends AbstractController {
 
         $this->core->getQueries()->deleteQueue($queue_code);
         $this->core->addSuccessMessage("Queue deleted");
+
+        $logger_params = array(
+            "course_semester" => $this->core->getConfig()->getSemester(),
+            "course_name" => $this->core->getDisplayedCourseName(),
+            "id" => $this->core->getUser()->getId(),
+            "queue_name" => $queue_code,
+            "secret_code" => "",
+            "action" => "Deleted Queue",
+        );
+        Logger::logOfficeHoursQueue($logger_params);
+
         return MultiResponse::RedirectOnlyResponse(
             new RedirectResponse($this->core->buildCourseUrl(['office_hours_queue']))
         );
@@ -389,6 +431,17 @@ class OfficeHoursQueueController extends AbstractController {
         $queue_code = preg_replace('/\s+/', '_', trim($queue_code));
         $this->core->getQueries()->changeQueueToken($token, $queue_code);
         $this->core->addSuccessMessage("Queue Access Code Changed");
+
+        $logger_params = array(
+            "course_semester" => $this->core->getConfig()->getSemester(),
+            "course_name" => $this->core->getDisplayedCourseName(),
+            "id" => $this->core->getUser()->getId(),
+            "queue_name" => $queue_code,
+            "secret_code" => $token,
+            "action" => "Changed Secret Code",
+        );
+        Logger::logOfficeHoursQueue($logger_params);
+
         return MultiResponse::RedirectOnlyResponse(
             new RedirectResponse($this->core->buildCourseUrl(['office_hours_queue']))
         );
