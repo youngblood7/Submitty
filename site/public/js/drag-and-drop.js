@@ -902,7 +902,7 @@ function handleSubmission(days_late, days_to_be_charged,late_days_allowed, versi
 
     if (!vcs_checkout) {
         // Check if new submission
-        if (!isValidSubmission() && empty_inputs) {
+        if (!isValidSubmission() && empty_inputs && follow_return) {
             alert("Not a new submission.");
             window.location.reload();
             return;
