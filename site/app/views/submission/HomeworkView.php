@@ -460,6 +460,7 @@ class HomeworkView extends AbstractView {
             'old_files' => $old_files,
             'inputs' => $input_data,
             'notebook' => $notebook_data ?? null,
+            'notebook_autosubmit_frequency' => $gradeable->getAutogradingConfig()->getNotebookAutosubmitFrequency(),
             'testcase_messages' => $testcase_messages,
             'image_data' => $image_data ?? null,
             'component_names' => $component_names,

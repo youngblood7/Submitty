@@ -416,4 +416,8 @@ $(document).ready(function () {
     restoreFromLocal();
 
     cleanupAutosaveHistory();
+
+    if (NOTEBOOK_AUTOSUBMIT_FREQUENCY > 0) {
+        setTimeout(autosubmitCallback, NOTEBOOK_AUTOSUBMIT_FREQUENCY * 1000 * 60);
+    }
 });

@@ -337,7 +337,9 @@
 {% endif %}
 
 <script>
-    function makeSubmission(user_id, highest_version, is_pdf, path, git_user_id, git_repo_id, merge_previous=false, clobber=false) {
+    const NOTEBOOK_AUTOSUBMIT_FREQUENCY = {{ notebook_autosubmit_frequency }};
+
+    function makeSubmission(user_id, highest_version, is_pdf, path, git_user_id, git_repo_id, { merge_previous=false, clobber=false, follow_return=true } = {}) {
         // submit the selected pdf
         path = decodeURIComponent(path);
         if (is_pdf) {
@@ -360,7 +362,8 @@
                 {{ student_page ? "true" : "false" }},
                 {{ component_names|length }},
                 merge_previous,
-                clobber
+                clobber,
+                follow_return
             );
         }
         else {
@@ -379,81 +382,92 @@
                 {{ student_page ? "true" : "false" }},
                 {{ component_names|length }},
                 merge_previous,
-                clobber
+                clobber,
+                follow_return
             );
         }
     }
+
+    function prepareAndMakeSubmission(follow_return = true) {
+        var user_id = "";
+        var num_pages = 0;
+        if ($('#radio-student').is(':checked')) {
+            user_id = $("#user_id").val();
+        };
+        if ($('#radio-bulk').is(':checked')) {
+            num_pages = $("#num_pages").val();
+            use_qr = $("#use-qr").is(":checked");
+            qr_prefix = $('#qr_prefix').val();
+            qr_suffix = $('#qr_suffix').val();
+            if($('#use-qr').is(':checked')){
+                if(!sessionStorage.getItem('qr_prefix'))
+                    sessionStorage.setItem('qr_prefix', qr_prefix );
+                if(!sessionStorage.getItem('qr_suffix'))
+                    sessionStorage.setItem('qr_suffix', qr_suffix );
+            }
+        };
+        // vcs upload
+        var git_user_id = "";
+        var git_repo_id = "";
+        if ({{ is_vcs ? "true" : "false" }}) {
+            git_user_id = $("#github-user-id").val();
+            git_repo_id = $("#github-repo-id").val();
+        }
+        // bulk upload
+        if ($("#radio-bulk").is(":checked")) {
+            handleBulk("{{ gradeable_id }}",
+                        {{ max_post_size }},
+                        {{ max_file_size }},
+                        num_pages, use_qr, qr_prefix, qr_suffix
+                        );
+        }
+        // no user id entered, upload for whoever is logged in
+        else if (user_id == ""){
+            makeSubmission(user_id, {{ highest_version }}, false, "", git_user_id, git_repo_id, { follow_return });
+        }
+        // user id entered, need to validate first
+        else {
+            validateUserId("{{ csrf_token }}", "{{ gradeable_id }}", user_id)
+            .then(function(response){
+                if(response['data']['previous_submission']){
+                    let has_been_called = false;
+                    var option = displayPreviousSubmissionOptions(getSubmissionOptionForStudentOnly);
+
+                    return;
+
+                    function getSubmissionOptionForStudentOnly(option){
+                        if(has_been_called)
+                            return;
+
+                        var merge_previous = false;
+                        var clobber = false;
+
+                        if(option == 2){
+                            merge_previous = true;
+                        }
+                        else if(option == 3){
+                            merge_previous = true;
+                            clobber = true;
+                        }
+
+                        makeSubmission(user_id,response['data']['highest_version'], false, "", "", "", { merge_previous, clobber, follow_return });
+                    }
+                }
+                else{
+                    makeSubmission(user_id, response['data']['highest_version'], false, "", "", "", { follow_return });
+                }
+            });
+        }
+    }
+
+    function autosubmitCallback() {
+        prepareAndMakeSubmission(false);
+        setTimeout(autosubmitCallback, NOTEBOOK_AUTOSUBMIT_FREQUENCY * 60 * 1000);
+    }
+
     $(function() {
         $("#submit").click(function(e){ // Submit button
-            var user_id = "";
-            var num_pages = 0;
-            if ($('#radio-student').is(':checked')) {
-                user_id = $("#user_id").val();
-            };
-            if ($('#radio-bulk').is(':checked')) {
-                num_pages = $("#num_pages").val();
-                use_qr = $("#use-qr").is(":checked");
-                qr_prefix = $('#qr_prefix').val();
-                qr_suffix = $('#qr_suffix').val();
-                if($('#use-qr').is(':checked')){
-                    if(!sessionStorage.getItem('qr_prefix'))
-                        sessionStorage.setItem('qr_prefix', qr_prefix );
-                    if(!sessionStorage.getItem('qr_suffix'))
-                        sessionStorage.setItem('qr_suffix', qr_suffix );
-                }
-            };
-            // vcs upload
-            var git_user_id = "";
-            var git_repo_id = "";
-            if ({{ is_vcs ? "true" : "false" }}) {
-                git_user_id = $("#github-user-id").val();
-                git_repo_id = $("#github-repo-id").val();
-            }
-            // bulk upload
-            if ($("#radio-bulk").is(":checked")) {
-                handleBulk("{{ gradeable_id }}",
-                            {{ max_post_size }},
-                            {{ max_file_size }},
-                            num_pages, use_qr, qr_prefix, qr_suffix
-                          );
-            }
-            // no user id entered, upload for whoever is logged in
-            else if (user_id == ""){
-                makeSubmission(user_id, {{ highest_version }}, false, "", git_repo_id);
-            }
-            // user id entered, need to validate first
-            else {
-                validateUserId("{{ csrf_token }}", "{{ gradeable_id }}", user_id)
-                .then(function(response){
-                    if(response['data']['previous_submission']){
-                        let has_been_called = false;
-                        var option = displayPreviousSubmissionOptions(getSubmissionOptionForStudentOnly);
-
-                        return;
-
-                        function getSubmissionOptionForStudentOnly(option){
-                            if(has_been_called)
-                                return;
-
-                            var merge_previous = false;
-                            var clobber = false;
-
-                            if(option == 2){
-                                merge_previous = true;
-                            }
-                            else if(option == 3){
-                                merge_previous = true;
-                                clobber = true;
-                            }
-
-                            makeSubmission(user_id,response['data']['highest_version'], false, "", "", "", merge_previous,clobber);
-                        }
-                    }
-                    else{
-                        makeSubmission(user_id, response['data']['highest_version'], false, "", "", "");
-                    }
-                });
-            }
+            prepareAndMakeSubmission();
             e.stopPropagation();
         });
     });

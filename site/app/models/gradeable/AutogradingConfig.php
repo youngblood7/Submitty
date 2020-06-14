@@ -31,6 +31,7 @@ use app\models\notebook\UserSpecificNotebook;
  * @method int getTotalHiddenExtraCredit()
  * @method bool getOnePartyOnly()
  * @method bool isNotebookGradeable()
+ * @method int getNotebookAutosubmitFrequency()
  */
 class AutogradingConfig extends AbstractModel {
 
@@ -56,6 +57,8 @@ class AutogradingConfig extends AbstractModel {
 
     /** @prop @var array Array of notebook objects */
     protected $notebook_config = [];
+    /** @prop @var int The number of minutes a notebook gradeable can be open before automatically making a submission. */
+    protected $notebook_autosubmit_frequency = -1;
     /** @prop @var AutogradingTestcase[] Cut-down information about autograding test cases*/
     private $testcases = [];
 
@@ -124,6 +127,7 @@ class AutogradingConfig extends AbstractModel {
 
         if (isset($details['notebook'])) {
             $this->notebook_config = $details['notebook'];
+            $this->notebook_autosubmit_frequency = intval($details['notebook_autosubmit_frequency'] ?? -1);
             $this->notebook_gradeable = true;
         }
 
