@@ -387,6 +387,8 @@ int main(int argc, char *argv[]) {
       j["notebook"].push_back(out_notebook_cell);
 
     }
+
+    j["notebook_autosubmit_frequency"] = config_json.value("notebook_autosubmit_frequency", -1);
   }
 
   // By default, we have one drop zone without a part label / sub
