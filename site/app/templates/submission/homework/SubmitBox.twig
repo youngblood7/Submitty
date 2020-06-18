@@ -460,11 +460,6 @@
         }
     }
 
-    function autosubmitCallback() {
-        prepareAndMakeSubmission(false);
-        setTimeout(autosubmitCallback, NOTEBOOK_AUTOSUBMIT_FREQUENCY * 60 * 1000);
-    }
-
     $(function() {
         $("#submit").click(function(e){ // Submit button
             prepareAndMakeSubmission();

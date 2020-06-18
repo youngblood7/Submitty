@@ -219,6 +219,12 @@ function saveAndWarnUnsubmitted(e) {
     return true;
 }
 
+function autosubmitCallback() {
+    prepareAndMakeSubmission(false);
+    setTimeout(autosubmitCallback, NOTEBOOK_AUTOSUBMIT_FREQUENCY * 60 * 1000);
+    displayMessage("Automatic submission made.", "success");
+}
+
 $(document).ready(function () {
 
     // If any button inside the notebook has been clicked then enable the submission button
@@ -419,5 +425,7 @@ $(document).ready(function () {
 
     if (NOTEBOOK_AUTOSUBMIT_FREQUENCY > 0) {
         setTimeout(autosubmitCallback, NOTEBOOK_AUTOSUBMIT_FREQUENCY * 1000 * 60);
+        const frequency_msg = NOTEBOOK_AUTOSUBMIT_FREQUENCY === 1 ? "minute" : `${NOTEBOOK_AUTOSUBMIT_FREQUENCY} minutes`;
+        displayMessage(`Submissions will be made automatically every ${frequency_msg}.`);
     }
 });
