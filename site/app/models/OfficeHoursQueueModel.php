@@ -4,6 +4,7 @@ namespace app\models;
 
 use app\libraries\Core;
 use app\libraries\DateUtils;
+use app\models\OfficeHoursQueueModel;
 
 class OfficeHoursQueueModel extends AbstractModel {
 
@@ -99,9 +100,7 @@ class OfficeHoursQueueModel extends AbstractModel {
     }
 
     public function timeToHM($time) {
-        $date_time = new \DateTime($time);
-        $date_time->setTimezone($this->core->getConfig()->getTimezone());
-        return DateUtils::convertTimeStamp($this->core->getUser(), $date_time->format('c'), $this->core->getConfig()->getDateTimeFormat()->getFormat('office_hours_queue'));
+        return date_format(date_create($time), "g:iA");
     }
 
     public function timeToISO($time) {

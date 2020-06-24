@@ -176,7 +176,7 @@ class UserTester extends \PHPUnit\Framework\TestCase {
         $this->assertNull($user->getId());
     }
 
-    public function testGetNiceFormatTimeZoneExplicitlySet() {
+    public function testGetTimeZoneNiceFormatExplicitlySet() {
         $user = new User($this->core, [
             'user_id' => 'test',
             'user_firstname' => 'test',
@@ -184,7 +184,7 @@ class UserTester extends \PHPUnit\Framework\TestCase {
             'user_email' => 'user@email.com',
             'time_zone' => 'NOT_SET/NOT_SET'
         ]);
-        $this->assertEquals('NOT SET', $user->getNiceFormatTimeZone());
+        $this->assertEquals('NOT SET', $user->getTimeZoneNiceFormat());
     }
 
     public function testGetUTCOffsetExplicitlySet() {

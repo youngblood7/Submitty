@@ -3,7 +3,6 @@
 namespace app\controllers\course;
 
 use app\controllers\AbstractController;
-use app\libraries\DateUtils;
 use app\libraries\FileUtils;
 use app\libraries\Utils;
 use app\libraries\ErrorMessages;
@@ -168,16 +167,10 @@ class CourseMaterialsController extends AbstractController {
         }
 
         $new_data_time = htmlspecialchars($newdatatime);
-        $new_data_time = DateUtils::parseDateTime($new_data_time, $this->core->getUser()->getUsableTimeZone());
-        $new_data_time = DateUtils::dateTimeToString($new_data_time);
-
         //Check if the datetime is correct
-        if (\DateTime::createFromFormat('Y-m-d H:i:sO', $new_data_time) === false) {
+        if (\DateTime::createFromFormat('Y-m-d H:i:s', $new_data_time) === false) {
             return $this->core->getOutput()->renderResultMessage("ERROR: Improperly formatted date", false);
         }
-
-        $new_data_time = DateUtils::parseDateTime($new_data_time, $this->core->getUser()->getUsableTimeZone());
-        $new_data_time = DateUtils::dateTimeToString($new_data_time);
 
         //only one will not iterate correctly
         if (is_string($data)) {
@@ -245,8 +238,7 @@ class CourseMaterialsController extends AbstractController {
 
         $release_time = "";
         if (isset($_POST['release_time'])) {
-            $date_time = DateUtils::parseDateTime($_POST['release_time'], $this->core->getUser()->getUsableTimeZone());
-            $release_time = DateUtils::dateTimeToString($date_time);
+            $release_time = $_POST['release_time'];
         }
         if ($requested_path === '') {
             return $this->core->getOutput()->renderResultMessage('Requested path cannot be empty');
@@ -286,8 +278,7 @@ class CourseMaterialsController extends AbstractController {
 
         $release_time = "";
         if (isset($_POST['release_time'])) {
-            $date_time = DateUtils::parseDateTime($_POST['release_time'], $this->core->getUser()->getUsableTimeZone());
-            $release_time = DateUtils::dateTimeToString($date_time);
+            $release_time = $_POST['release_time'];
         }
 
         $sections = null;
@@ -305,7 +296,7 @@ class CourseMaterialsController extends AbstractController {
         }
 
         //Check if the datetime is correct
-        if (\DateTime::createFromFormat('Y-m-d H:i:sO', $release_time) === false) {
+        if (\DateTime::createFromFormat('Y-m-d H:i:s', $release_time) === false) {
             return $this->core->getOutput()->renderResultMessage("ERROR: Improperly formatted date", false);
         }
 

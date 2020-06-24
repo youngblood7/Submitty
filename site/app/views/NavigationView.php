@@ -2,6 +2,7 @@
 
 namespace app\views;
 
+use app\libraries\DateUtils;
 use app\models\Button;
 use app\libraries\GradeableType;
 use app\models\User;
@@ -214,7 +215,7 @@ class NavigationView extends AbstractView {
             "seating_only_for_instructor" => $this->core->getConfig()->isSeatingOnlyForInstructor(),
             "gradeable_title" => $gradeable_title,
             "seating_config" => $seating_config,
-            "date_time_format" => $this->core->getConfig()->getDateTimeFormat()->getFormat('gradeable')
+            "DATE_TIME_FORMAT" => DateUtils::DATE_TIME_FORMAT
         ]);
     }
 

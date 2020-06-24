@@ -150,6 +150,7 @@ class DateUtilsTester extends \PHPUnit\Framework\TestCase {
         $this->assertEquals('2019-01-20 13:24:55', $actual);
     }
 
+  /*<<<<<<< HEAD
     public function testGetServerTime(): void {
         $core = new Core();
         $config = new Config($core);
@@ -180,10 +181,10 @@ class DateUtilsTester extends \PHPUnit\Framework\TestCase {
             ['Pacific/Honolulu', '-10:00'],
         ];
     }
-
-    /**
+  
+    / **
      * @dataProvider utcOffsetProvider
-     */
+     * /
     public function testGetUTCOffset(string $timezone, string $expected): void {
         $this->assertSame($expected, DateUtils::getUTCOffset($timezone));
     }
@@ -199,10 +200,13 @@ class DateUtilsTester extends \PHPUnit\Framework\TestCase {
         ];
     }
 
-    /**
+    / **
      * @dataProvider convertTimeStampProvider
-     */
+     * /
     public function testConvertTimeStamp(string $timezone, string $timestamp, string $format, string $expected): void {
+=======
+    public function testGetServerTime() {
+>>>>>>> parent of 5070401cb... [Feature:PHP] Show times in user's timezone site wide (#5473)
         $core = new Core();
         $config = new Config($core);
         $config->setTimezone(new \DateTimeZone('America/New_York'));
@@ -216,4 +220,6 @@ class DateUtilsTester extends \PHPUnit\Framework\TestCase {
         ]);
         $this->assertSame($expected, DateUtils::convertTimeStamp($user, $timestamp, $format));
     }
+*/
+
 }
