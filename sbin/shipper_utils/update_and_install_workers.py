@@ -181,4 +181,4 @@ if __name__ == "__main__":
         # Install new docker containers for everyone.
         update_docker_images(user, host, worker, autograding_workers, autograding_containers)
 
-        print (f"finished updating machine: {worker}")
+        print (f"Finished updating machine: {worker}")

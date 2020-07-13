@@ -840,7 +840,7 @@ else
     fi
 
     # Update any foreign worker machines
-    echo -e -n "Update workers and install autograding docker images on primary and worker machines"
+    echo -e -n "Update workers and install autograding docker images on primary and worker machines\n"
     # note: unbuffer the output (python3 -u), since installing docker images takes a while
     #       and we'd like to watch the progress
     sudo -H -u ${DAEMON_USER} python3 -u ${SUBMITTY_INSTALL_DIR}/sbin/shipper_utils/update_and_install_workers.py
