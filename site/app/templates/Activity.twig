@@ -1,72 +1,80 @@
-<div class="content">
-    <header>
-        <h1>Student Activity Dashboard</h1>
-        <div class="btn-wrapper">
-            <a href="javascript:newDownloadForm()" class="btn btn-primary">Download Users</a>
-            <a href="javascript:newClassListForm()" class="btn btn-primary">Upload Classlist</a>
-            <a href="javascript:newStudentForm()" class="btn btn-primary">New Student</a>
-        </div>
-    </header>
-    {# This is a data table #}
-    {% if sections|length > 0 %}
-        <table id="student-table" class="table table-striped mobile-table directory-table">
-            <caption>Students Enrolled</caption>
-            <thead>
+<div class="content forum_content">
+    {% include "forum/ForumBar.twig" with {
+        "forum_bar_buttons_right" : forumBarData.forum_bar_buttons_right,
+        "forum_bar_buttons_left" : forumBarData.forum_bar_buttons_left,
+        "show_threads" : forumBarData.show_threads,
+        "thread_exists" : forumBarData.thread_exists,
+        "show_filter": false
+    } %}
+    <div class="stats-table-container">
+        <table class="table table-striped table-bordered persist-area" id="forum_stats_table">
+            <tr>
+                <th class = "cursor-pointer" style="width:15%" id="user_sort"><a href="#">User</a></th>
+                <th class = "cursor-pointer"  id="total_posts_sort"><a href="#">Total Posts (not deleted)</a></th>
+                <th class = "cursor-pointer" style="width:15%" id="total_threads_sort"><a href="#">Total Threads</a></th>
+                <th class = "cursor-pointer" style="width:15%" id="total_deleted_sort"><a href="#">Total Deleted Posts</a></th>
+                <th style="width:40%">Show Posts</th>
+            </tr>
+            
+        {% if students.length > 0 %}{
+            {% for user in students %}
+                <tbody>
                 <tr>
-                    <th>#</th>
-                    <th>Registration Section</th>
-                    <th>User ID</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Rotating Section</th>
-                    <th>UTC Offset / Time Zone</th>
-                    <th>View Grades</th>
-                    <th>Edit Student</th>
-                    <th>Delete Student</th>
+                    <td>{{ user.last_name }}, {{ user.first_name }}</td>
                 </tr>
-            </thead>
-            {% for registration, students in sections %}
-                <tbody id="section-{{ registration }}">
-                    <tr class="info">
-                        <th class="section-break" colspan="10">Students Enrolled in Registration Section {{ registration }}</td>
-                    </tr>
-                    {% for student in students %}
-                        {% set class = "" %}
-                        {% if student.accessGrading() %}
-                            {% set class = "access-grading" %}
-                        {% endif %}
-                        <tr id="user-{{ student.getId() }}" class="{{ class }}">
-                            <td></td>
-                            <td>
-                                {{ registration }}
-                                {% if student.isManualRegistration() %}
-                                    <i class="fas fa-hammer" title="Manually Registered"></i>
-                                {% endif %}
-                            </td>
-                            <td class="align-left">{{ student.getId() }}</td>
-                            <td class="align-left">{{ student.getDisplayedFirstName() }}</td>
-                            <td class="align-left">{{ student.getDisplayedLastName() }}</td>
-                            <td>{{ student.getRotatingSection() ?? "NULL" }}</td>
-                            <td>{{ formatted_tzs[student.getId()] }}</td>
-                            <td>
-                                <form method="post" action="{{ view_grades_url }}">
-                                    <input type="hidden" name="csrf_token" value="{{ csrf_token }}"/>
-                                    <input type="hidden" name="student_id" value="{{ student.getId() }}"/>
-                                    <a onclick="$(this).parent().submit();"><i class="fas fa-chart-line"></i></a>
-                                </form>
-                            </td>
-                            <td><a href="javascript:editUserForm('{{ student.getId() }}');" aria-label="edit user {{grader.getDisplayedFirstName()}} {{grader.getDisplayedLastName()}}"><i class="fas fa-pencil-alt"></i></a></td>
-                            <td><a href="javascript:deleteUserForm('{{ student.getId() }}', '{{ student.getDisplayedFirstName() }}', '{{ student.getDisplayedLastName() }}');" aria-label="delete student {{ student.getDisplayedFirstName() }} {{ student.getDisplayedLastName() }}"><i class="fas fa-trash"></i></a></td>
-                        </tr>
-                    {% endfor %}
                 </tbody>
             {% endfor %}
+        } 
+        {% else %} 
+          <h1> No students found. </h1>
+       {% endif %}
+            
         </table>
-    {% else %}
-        <p id="no-one-found" class="warning">No students found</p>
-    {% endif %}
+    </div>
 </div>
-{% include('admin/users/UserForm.twig') %}
-{% include('admin/users/ClassListForm.twig') %}
-{% include('admin/users/DownloadForm.twig') with { 'code': 'user' } %}
-{% include('admin/users/DeleteUserForm.twig') %}
+
+<script>
+    $("td").click(function(){
+        var table_id = 0;
+        switch ($(this).attr('id')) {
+            default:
+                table_id = 0;
+        }
+    });
+
+    $("button").click(function(){
+
+        var action = $(this).data('action');
+        var posts = $(this).data('posts');
+        var ids = $(this).data('id');
+        var timestamps = $(this).data('timestamps');
+        var thread_ids = $(this).data('thread_id');
+        var thread_titles = $(this).data('thread_titles');
+    
+            $(this).html("Collapse");
+            $(this).data('action',"collapse");
+            $("td").click(function(){
+
+                if($(this).data('type')=="post" || $(this).data('type')=="thread"){
+                    var id = $(this).data('thread_id');
+                    var url = buildCourseUrl(['forum', 'threads', id]);
+                    window.open(url);
+                }
+
+            });
+        }
+        else{
+            for(var i=0;i<ids.length;i++){
+                var item = document.getElementById(ids[i]);
+                item.remove();
+            }
+
+            $(this).data('action');
+        }
+
+
+        return false;
+    });
+
+
+</script>

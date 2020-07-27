@@ -1081,6 +1081,15 @@ WHERE semester=? AND course=? AND user_id=?",
     }
 
 
+    public function getUsers() {
+        // $this->course_db->query("SELECT * FROM users AS u);
+        $return = [];
+        foreach ($this->course_db->rows() as $row) {
+            $return[] = new User($this->core, $row);
+        }
+        return $return;
+    }
+
     public function getUsersByRegistrationSections($sections, $orderBy = "registration_section") {
         $return = [];
         if (count($sections) > 0) {

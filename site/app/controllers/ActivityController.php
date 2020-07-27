@@ -25,6 +25,7 @@ class ActivityController extends AbstractController {
      * @return MultiResponse
      */
     public function showActivity() {
+
         return MultiResponse::webOnlyResponse(
             new WebResponse(
                 'Activity', // name of your view
@@ -32,5 +33,5 @@ class ActivityController extends AbstractController {
             )
         );
     }
-
 }
+
