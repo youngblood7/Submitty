@@ -983,13 +983,13 @@ class ElectronicGraderController extends AbstractController {
         }
         
         $peer_double_blind = false;
-        if($peer && $gradeable->getPeerBlind() == 3){
+        if ($peer && $gradeable->getPeerBlind() == 3) {
             $peer_double_blind = true;
         }
         
         $limited_access_blind = false;
         
-        if($gradeable->getLimitedAccessBlind() == 2 && $this->core->getUser()->getGroup() == User::GROUP_LIMITED_ACCESS_GRADER){
+        if ($gradeable->getLimitedAccessBlind() == 2 && $this->core->getUser()->getGroup() == User::GROUP_LIMITED_ACCESS_GRADER) {
             $limited_access_blind = true;
         }
         

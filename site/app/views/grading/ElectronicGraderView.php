@@ -392,7 +392,7 @@ HTML;
             if ($gradeable->isTeamAssignment()) {
                 $columns[] = ["width" => "30%", "title" => "Team Members",     "function" => "team_members_anon"];
             }
-            elseif($gradeable->getPeerBlind() !== 3){
+            elseif ($gradeable->getPeerBlind() !== 3) {
                 $columns[]         = ["width" => "30%", "title" => "Student",          "function" => "user_id"];
             }
             else {
@@ -403,20 +403,20 @@ HTML;
             }
             if ($gradeable->getAutogradingConfig()->getTotalNonHiddenNonExtraCredit() !== 0) {
                 $columns[]     = ["width" => "15%", "title" => "Autograding",      "function" => "autograding_peer"];
-                if($gradeable->getPeerBlind() !== 3){
+                if ($gradeable->getPeerBlind() !== 3) {
                     $columns[]     = ["width" => "20%", "title" => "Grading",          "function" => "grading"];
                 }
-                else{
+                else {
                     $columns[]     = ["width" => "20%", "title" => "Grading",          "function" => "grading_blind"];
                 }
                 $columns[]     = ["width" => "15%", "title" => "Total",            "function" => "total_peer"];
                 $columns[]     = ["width" => "15%", "title" => "Active Version",   "function" => "active_version"];
             }
             else {
-                if($gradeable->getPeerBlind() !== 3){
+                if ($gradeable->getPeerBlind() !== 3) {
                     $columns[]     = ["width" => "20%", "title" => "Grading",          "function" => "grading"];
                 }
-                else{
+                else {
                     $columns[]     = ["width" => "20%", "title" => "Grading",          "function" => "grading_blind"];
                 }
                 $columns[]     = ["width" => "20%", "title" => "Total",            "function" => "total_peer"];
@@ -441,10 +441,10 @@ HTML;
             else {
                 $columns[]     = ["width" => "2%",  "title" => "",                 "function" => "index"];
                 $columns[]     = ["width" => "8%", "title" => "Section",          "function" => "section"];
-                if($this->core->getUser()->getGroup() == User::GROUP_LIMITED_ACCESS_GRADER && $gradeable->getLimitedAccessBlind() == 2){
+                if ($this->core->getUser()->getGroup() == User::GROUP_LIMITED_ACCESS_GRADER && $gradeable->getLimitedAccessBlind() == 2) {
                     $columns[]         = ["width" => "43%", "title" => "Student",          "function" => "user_id_anon"];
                 }
-                else{
+                else {
                     $columns[]     = ["width" => "13%", "title" => "User ID",          "function" => "user_id", "sort_type" => "id"];
                     $columns[]     = ["width" => "15%", "title" => "First Name",       "function" => "user_first", "sort_type" => "first"];
                     $columns[]     = ["width" => "15%", "title" => "Last Name",        "function" => "user_last", "sort_type" => "last"];
@@ -455,10 +455,10 @@ HTML;
                 if ($gradeable->isTaGrading()) {
                     $columns[]     = ["width" => "8%",  "title" => "Graded Questions", "function" => "graded_questions"];
                 }
-                if($this->core->getUser()->getGroup() == User::GROUP_LIMITED_ACCESS_GRADER && $gradeable->getLimitedAccessBlind() == 2){
+                if ($this->core->getUser()->getGroup() == User::GROUP_LIMITED_ACCESS_GRADER && $gradeable->getLimitedAccessBlind() == 2) {
                     $columns[]     = ["width" => "8%",  "title" => "TA Grading",       "function" => "grading_blind"];
                 }
-                else{
+                else {
                     $columns[]     = ["width" => "8%",  "title" => "TA Grading",       "function" => "grading"];
                 }
                 $columns[]     = ["width" => "7%",  "title" => "Total",            "function" => "total"];
@@ -471,10 +471,10 @@ HTML;
                 if ($gradeable->isTaGrading()) {
                     $columns[]     = ["width" => "8%",  "title" => "Graded Questions", "function" => "graded_questions"];
                 }
-                if($this->core->getUser()->getGroup() == User::GROUP_LIMITED_ACCESS_GRADER && $gradeable->getLimitedAccessBlind() == 2){
+                if ($this->core->getUser()->getGroup() == User::GROUP_LIMITED_ACCESS_GRADER && $gradeable->getLimitedAccessBlind() == 2) {
                     $columns[]     = ["width" => "12%", "title" => "TA Grading",       "function" => "grading_blind"];
                 }
-                else{
+                else {
                     $columns[]     = ["width" => "8%",  "title" => "TA Grading",       "function" => "grading"];
                 }
                 $columns[]     = ["width" => "12%", "title" => "Total",            "function" => "total"];
@@ -725,11 +725,11 @@ HTML;
             "peer" => $peer,
             "details_base_url" => $details_base_url,
             "view_all_toggle_url" => $details_base_url . '?' .
-                http_build_query(['view' => $view_all ? null : 'all', 'sort' => $sort, 'direction' => $sort === 'random' ? null : $direction, 'anon_mode' => $anon_mode ? true : false]),
+                http_build_query(['view' => $view_all ? null : 'all', 'sort' => $sort, 'direction' => $sort === 'random' ? null : $direction, 'anon_mode' => $anon_mode]),
             "order_toggle_url" => $details_base_url . '?' .
                 http_build_query(['view' => $view_all ? 'all' : null, 'sort' => $sort === 'random' ? null : 'random', 'anon_mode' => $anon_mode ? true : false]),
             "toggle_anon_mode_url" => $details_base_url . '?' .
-                http_build_query(['view' => $view_all ? 'all' : null, 'sort' => $sort, 'direction' => $sort === 'random' ? null : $direction, 'anon_mode' => $anon_mode ? false : true]),
+                http_build_query(['view' => $view_all ? 'all' : null, 'sort' => $sort, 'direction' => $sort === 'random' ? null : $direction, 'anon_mode' => !$anon_mode]),
             "sort" => $sort,
             "direction" => $direction
         ]);
@@ -849,7 +849,7 @@ HTML;
         $this->core->getOutput()->addVendorJs(FileUtils::joinPaths('codemirror', 'codemirror.js'));
 
         if ($this->core->getUser()->getGroup() < 4 && $gradeable->getLimitedAccessBlind() !== 2) {
-            $return .= $this->core->getOutput()->renderTemplate(array('grading', 'ElectronicGrader'), 'renderInformationPanel', $graded_gradeable, $display_version_instance, $showNewInterface);
+            $return .= $this->core->getOutput()->renderTemplate(['grading', 'ElectronicGrader'], 'renderInformationPanel', $graded_gradeable, $display_version_instance, $showNewInterface);
         }
         if ($this->core->getConfig()->isRegradeEnabled() && $this->core->getUser()->getGroup() < 4) {
             $return .= $this->core->getOutput()->renderTemplate(['grading', 'ElectronicGrader'], 'renderRegradePanel', $graded_gradeable, $can_inquiry, $showNewInterface);
