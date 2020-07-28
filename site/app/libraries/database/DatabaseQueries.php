@@ -4803,7 +4803,7 @@ AND gc_id IN (
                 $gradeable->getLateDays(),
                 $gradeable->isLateSubmissionAllowed(),
                 $gradeable->getPrecision(),
-                $gradeable->PeerGrading(),
+                $gradeable->isPeerGrading(),
                 $gradeable->getLimitedAccessBlind(),
                 $gradeable->getPeerBlind(),
                 $gradeable->getPeerGradeSet(),
