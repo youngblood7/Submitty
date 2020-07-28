@@ -272,6 +272,12 @@ class Gradeable extends AbstractModel {
             $this->setDiscussionBased((bool) $details['discussion_based']);
             $this->setDiscussionThreadId($details['discussion_thread_ids']);
             $this->setLimitedAccessBlind($details['limited_access_blind']);
+            if (array_key_exists('peer_grading', $details)) {
+                $this->setPeerGradersList($details['peer_grading']);
+            }
+            if (array_key_exists('limited_access_blind', $details)) {
+                $this->setPeerGradersList($details['limited_access_blind']);
+            }
         }
 
         $this->setActiveRegradeRequestCount($details['active_regrade_request_count'] ?? 0);
