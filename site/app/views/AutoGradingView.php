@@ -573,7 +573,7 @@ class AutoGradingView extends AbstractView {
                 $peer_aliases[$grader_id] = $grader_id;
             }
             else {
-                $peer_aliases[$grader_id] = $alias;    
+                $peer_aliases[$grader_id] = $alias;
             }
             // Effectively sorts peers by $num_peers.
             array_push($ordered_graders, $grader_id);
