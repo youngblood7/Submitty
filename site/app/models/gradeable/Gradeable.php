@@ -264,16 +264,14 @@ class Gradeable extends AbstractModel {
             $this->setHasDueDate($details['has_due_date']);
             $this->setPeerGrading($details['peer_grading']);
             $this->setPeerGradeSet($details['peer_grade_set']);
-            $this->setPeerBlind($details['peer_blind']);
             $this->setLateSubmissionAllowed($details['late_submission_allowed']);
             $this->setPrecision($details['precision']);
             $this->setRegradeAllowedInternal($details['regrade_allowed']);
             $this->setGradeInquiryPerComponentAllowed($details['grade_inquiry_per_component_allowed']);
             $this->setDiscussionBased((bool) $details['discussion_based']);
             $this->setDiscussionThreadId($details['discussion_thread_ids']);
-            $this->setLimitedAccessBlind($details['limited_access_blind']);
-            if (array_key_exists('peer_grading', $details)) {
-                $this->setPeerGradersList($details['peer_grading']);
+            if (array_key_exists('peer_blind', $details)) {
+                $this->setPeerGradersList($details['peer_blind']);
             }
             if (array_key_exists('limited_access_blind', $details)) {
                 $this->setPeerGradersList($details['limited_access_blind']);
