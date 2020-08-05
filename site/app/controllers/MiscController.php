@@ -39,6 +39,11 @@ class MiscController extends AbstractController {
         $graded_gradeable = $this->core->getQueries()->getGradedGradeableForSubmitter($gradeable, $submitter);
         $active_version = $graded_gradeable->getAutoGradedGradeable()->getActiveVersion();
         $file_path = ($_POST['file_path']);
+        $anon_id = explode("/", $file_path)[9];
+        $correct_user_id = $this->core->getQueries()->getSubmitterIdFromAnonId($anon_id);
+        if ($correct_user_id !== null) {
+            $file_path = str_replace($anon_id, $correct_user_id, $file_path);
+        }
         $directory = 'invalid';
         if (strpos($file_path, 'submissions') !== false) {
             $directory = 'submissions';
@@ -57,7 +62,7 @@ class MiscController extends AbstractController {
 
         if (!Utils::startsWith($file_path, $check_path)) {
             return MultiResponse::JsonOnlyResponse(
-                JsonResponse::getFailResponse("Invalid file path")
+                JsonResponse::getFailResponse($file_path)
             );
         }
 
@@ -79,7 +84,11 @@ class MiscController extends AbstractController {
     public function displayFile($dir, $path, $gradeable_id = null, $user_id = null, $ta_grading = null) {
         //Is this per-gradeable?
         $path = $this->core->getAccess()->resolveDirPath($dir, htmlspecialchars_decode(urldecode($path)));
-
+        $anon_id = explode("/", $path)[9];
+        $correct_user_id = $this->core->getQueries()->getSubmitterIdFromAnonId($anon_id);
+        if ($correct_user_id !== null) {
+            $path = str_replace($anon_id, $correct_user_id, $path);
+        }
         if (!is_null($gradeable_id)) {
             $gradeable = $this->tryGetGradeable($gradeable_id, false);
             if ($gradeable === false) {
