@@ -190,7 +190,8 @@ class ElectronicGraderView extends AbstractView {
                 }
             }
             foreach ($sections as $key => &$section) {
-                $section['graded'] = round($section['graded_components'] / count($gradeable->getNonPeerComponents()), 1);
+                $non_peer_components_count = count($gradeable->getNonPeerComponents());
+                $section['graded'] = round($section['graded_components'] / ($non_peer_components_count != 0 ? $non_peer_components_count : 1), 1);
                 $section['total'] = $section['total_components'];
                 if ($section['total_components'] == 0) {
                     $section['percentage'] = 0;
@@ -321,20 +322,20 @@ class ElectronicGraderView extends AbstractView {
 
         $return = <<<HTML
 
-		<div class="content_upload_content">
+        <div class="content_upload_content">
 
 HTML;
         $this->core->getOutput()->addBreadcrumb("Bulk Upload Forensics", $this->core->buildCourseUrl(['gradeable', $gradeable_id, 'bulk_stats']));
 
         $return .= <<<HTML
-			<div style="padding-left:20px;padding-bottom: 10px;border-radius:3px;padding-right:20px;">
-				<table class="table table-striped table-bordered persist-area" id="content_upload_table">
-					<tr>
-				        <th style = "cursor:pointer;width:25%" id="user_down">User &darr;</th>
-				        <th style = "cursor:pointer;width:25%" id="upload_down">Upload Timestamp</th>
-				        <th style = "cursor:pointer;width:25%" id="submission_down">Submission Timestamp</th>
-				        <th style = "cursor:pointer;width:25%" id="filepath_down">Filepath</th>
-					</tr>
+            <div style="padding-left:20px;padding-bottom: 10px;border-radius:3px;padding-right:20px;">
+                <table class="table table-striped table-bordered persist-area" id="content_upload_table">
+                    <tr>
+                        <th style = "cursor:pointer;width:25%" id="user_down">User &darr;</th>
+                        <th style = "cursor:pointer;width:25%" id="upload_down">Upload Timestamp</th>
+                        <th style = "cursor:pointer;width:25%" id="submission_down">Submission Timestamp</th>
+                        <th style = "cursor:pointer;width:25%" id="filepath_down">Filepath</th>
+                    </tr>
 HTML;
 
         foreach ($users as $user => $details) {
@@ -345,75 +346,75 @@ HTML;
             $filepath = htmlspecialchars($details["file"]);
 
             $return .= <<<HTML
-			<tbody>
-				<tr>
-					<td>{$last_name}, {$first_name}</td>
+            <tbody>
+                <tr>
+                    <td>{$last_name}, {$first_name}</td>
                     <td>{$upload_timestamp}</td>
                     <td>{$submit_timestamp}</td>
                     <td>{$filepath}</td>
-				</tr>
-			</tbody>
+                </tr>
+            </tbody>
 HTML;
         }
 
         $return .= <<<HTML
-				</table>
-			</div>
-			</div>
+                </table>
+            </div>
+            </div>
 
-			<script>
-				$("td").click(function(){
-					if($(this).attr('id')=="user_down"){
-						sortTable(0);
-					}
-					if($(this).attr('id')=="upload_down"){
-						sortTable(1);
-					}
-					if($(this).attr('id')=="submission_down"){
-						sortTable(2);
-					}
-					if($(this).attr('id')=="filepath_down"){
-						sortTable(3);
-					}
+            <script>
+                $("td").click(function(){
+                    if($(this).attr('id')=="user_down"){
+                        sortTable(0);
+                    }
+                    if($(this).attr('id')=="upload_down"){
+                        sortTable(1);
+                    }
+                    if($(this).attr('id')=="submission_down"){
+                        sortTable(2);
+                    }
+                    if($(this).attr('id')=="filepath_down"){
+                        sortTable(3);
+                    }
 
-				});
+                });
 
-				function sortTable(sort_element_index){
-					var table = document.getElementById("content_upload_table");
-					var switching = true;
-					while(switching){
-						switching=false;
-						var rows = table.getElementsByTagName("TBODY");
-						for(var i=1;i<rows.length-1;i++){
+                function sortTable(sort_element_index){
+                    var table = document.getElementById("content_upload_table");
+                    var switching = true;
+                    while(switching){
+                        switching=false;
+                        var rows = table.getElementsByTagName("TBODY");
+                        for(var i=1;i<rows.length-1;i++){
 
-							var a = rows[i].getElementsByTagName("TR")[0].getElementsByTagName("TD")[sort_element_index];
-							var b = rows[i+1].getElementsByTagName("TR")[0].getElementsByTagName("TD")[sort_element_index];
+                            var a = rows[i].getElementsByTagName("TR")[0].getElementsByTagName("TD")[sort_element_index];
+                            var b = rows[i+1].getElementsByTagName("TR")[0].getElementsByTagName("TD")[sort_element_index];
                             // sorted alphabetically by last name or by earliest time
-							if((sort_element_index >= 0 && sort_element_index <= 3) ? a.innerHTML>b.innerHTML : parseInt(a.innerHTML) < parseInt(b.innerHTML)){
-								rows[i].parentNode.insertBefore(rows[i+1],rows[i]);
-								switching=true;
-							}
-						}
-					}
+                            if((sort_element_index >= 0 && sort_element_index <= 3) ? a.innerHTML>b.innerHTML : parseInt(a.innerHTML) < parseInt(b.innerHTML)){
+                                rows[i].parentNode.insertBefore(rows[i+1],rows[i]);
+                                switching=true;
+                            }
+                        }
+                    }
 
-					var row0 = table.getElementsByTagName("TBODY")[0].getElementsByTagName("TR")[0];
-					var headers = row0.getElementsByTagName("TD");
+                    var row0 = table.getElementsByTagName("TBODY")[0].getElementsByTagName("TR")[0];
+                    var headers = row0.getElementsByTagName("TD");
 
-					for(var i = 0;i<headers.length;i++){
-						var index = headers[i].innerHTML.indexOf(' ↓');
+                    for(var i = 0;i<headers.length;i++){
+                        var index = headers[i].innerHTML.indexOf(' ↓');
 
-						if(index> -1){
+                        if(index> -1){
 
-							headers[i].innerHTML = headers[i].innerHTML.substr(0, index);
-							break;
-						}
-					}
+                            headers[i].innerHTML = headers[i].innerHTML.substr(0, index);
+                            break;
+                        }
+                    }
 
-					headers[sort_element_index].innerHTML = headers[sort_element_index].innerHTML + ' ↓';
+                    headers[sort_element_index].innerHTML = headers[sort_element_index].innerHTML + ' ↓';
 
-				}
+                }
 
-			</script>
+            </script>
 HTML;
         return $return;
     }
@@ -829,8 +830,8 @@ HTML;
             $this->core->getOutput()->addInternalJs("drag-and-resize-two-panels.js");
 
             $return .= <<<HTML
-        		<div class="content" id="electronic-gradeable-container">
-        		    <div class="content-items-container">
+                <div class="content" id="electronic-gradeable-container">
+                    <div class="content-items-container">
                     <div class="content-item content-item-right">
 HTML;
             $return .= $this->core->getOutput()->renderTemplate(['grading', 'ElectronicGrader'], 'renderNavigationBar', $graded_gradeable, $progress, $gradeable->isPeerGrading(), $sort, $direction, $from, $showNewInterface);
@@ -997,7 +998,7 @@ HTML;
                     </div>
                 </div>
             </div>
-		</div>
+        </div>
 HTML;
         }
         return $return;
