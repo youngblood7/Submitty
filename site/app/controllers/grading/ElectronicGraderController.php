@@ -53,9 +53,10 @@ class ElectronicGraderController extends AbstractController {
      * Helper function for Randomization
      * @param Array $student_array
      * @param int $number_to_grade
+     * @param Gradeable $gradeable
      * @return Array $final_grading_info
      */
-    public function setRandomizedGraders(array $student_array, int $number_to_grade) {
+    public function setRandomizedGraders(array $student_array, int $number_to_grade, Gradeable $gradeable): array {
         $final_grading_info = [];
         $graded_array = $student_array;
         /*n_array_peers : An Array of arrays that holds information on to be graded peers
@@ -98,16 +99,13 @@ class ElectronicGraderController extends AbstractController {
             }
             array_push($final_grading_info, [$n_array_peers[0][$i],$temp]);
         }
-        if ($number_to_grade < 1) {
-            $gradeable->setRandomPeerGradersList($final_grading_info);
-            return JsonResponse::getSuccessResponse("Clear Peer Matrix");
-        }
-            return $final_grading_info;
+        
+        return $final_grading_info;
     }
 
     /**
      * Helper function for all grade all in randomized peer assignments
-     * @param Array $student_arraye
+     * @param Array $student_array
      * @return Array $final_grading_info
      */
     public function setAllGradAllGrading($student_array) {
@@ -184,7 +182,12 @@ class ElectronicGraderController extends AbstractController {
                     }
                 }
                 else {
-                    $final_grading_info = $this->setRandomizedGraders($student_array, $number_to_grade);
+                    $final_grading_info = $this->setRandomizedGraders($student_array, $number_to_grade, $gradeable);
+
+                    if ($number_to_grade < 1) {
+                        $gradeable->setRandomPeerGradersList($final_grading_info);
+                        return JsonResponse::getSuccessResponse("Clear Peer Matrix");
+                    }
                 }
             }
             $gradeable->setRandomPeerGradersList($final_grading_info);
@@ -224,7 +227,7 @@ class ElectronicGraderController extends AbstractController {
             $gradeable->setRandomPeerGradersList($final_grading_info);
             return JsonResponse::getSuccessResponse($final_grading_info);
         }
-        $final_grading_info = $this->setRandomizedGraders($student_array, $number_to_grade);
+        $final_grading_info = $this->setRandomizedGraders($student_array, $number_to_grade, $gradeable);
         if ($number_to_grade < 1) {
             $gradeable->setRandomPeerGradersList($final_grading_info);
             return JsonResponse::getSuccessResponse("Clear Peer Matrix");
