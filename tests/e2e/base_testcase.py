@@ -239,10 +239,11 @@ class BaseTestCase(unittest.TestCase):
             self.ws = create_connection(address, cookie = submitty_session_cookie['name'] +'='+ submitty_session_cookie['value'], header={"User-Agent": "python-socket-client"})
         except WebSocketBadStatusException as e:
             traceback.print_exc()
-            print(e.status_message)
             print(e.resp_headers)
+            raise
         except Exception:
             traceback.print_exc()
+            raise
 
         new_connection_msg = json.dumps({'type': 'new_connection', 'page': self.semester + '-sample-' + self.socket_page})
         self.ws.send(new_connection_msg)
