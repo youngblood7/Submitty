@@ -234,12 +234,13 @@ class BaseTestCase(unittest.TestCase):
             netloc = netloc.split(':', 1)[0]
         netloc += ':8443'
         address = parsed._replace(netloc=netloc).geturl()
+        print(f'address {address}')
 
         try:
             self.ws = create_connection(address, cookie = submitty_session_cookie['name'] +'='+ submitty_session_cookie['value'], header={"User-Agent": "python-socket-client"})
         except WebSocketBadStatusException as e:
             traceback.print_exc()
-            print(e.resp_headers)
+            print(f'header {e.resp_headers}')
             raise
         except Exception:
             traceback.print_exc()
