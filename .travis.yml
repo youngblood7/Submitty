@@ -286,6 +286,7 @@ jobs:
         - sudo chmod 644 /etc/nginx/sites-available/submitty.conf
         - sudo ln -s /etc/nginx/sites-available/submitty.conf /etc/nginx/sites-enabled/submitty.conf
         - sudo service nginx restart
+        - sudo service apache2 restart
       script:
         - echo "Authentication Method => $(sudo jq -r ".authentication_method" /usr/local/submitty/config/database.json)"
         - TEST_URL="http://localhost" python3 -m unittest discover -v --start-directory tests

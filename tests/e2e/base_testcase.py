@@ -235,6 +235,8 @@ class BaseTestCase(unittest.TestCase):
         netloc += ':8443'
         address = parsed._replace(netloc=netloc).geturl()
         print(f'address {address}')
+        cookie = submitty_session_cookie['name'] +'='+ submitty_session_cookie['value']
+        print(cookie)
 
         try:
             self.ws = create_connection(address, cookie = submitty_session_cookie['name'] +'='+ submitty_session_cookie['value'], header={"User-Agent": "python-socket-client"})
