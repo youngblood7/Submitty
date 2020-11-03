@@ -4,12 +4,14 @@ from datetime import date
 import os
 import unittest
 import json
+import traceback
 
 from urllib.parse import urlencode
 from urllib.parse import urlparse
 
 from selenium import webdriver
 from websocket import create_connection
+from websocket import WebSocketBadStatusException
 
 from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.support.ui import WebDriverWait
@@ -233,7 +235,15 @@ class BaseTestCase(unittest.TestCase):
         netloc += ':8443'
         address = parsed._replace(netloc=netloc).geturl()
 
-        self.ws = create_connection(address, cookie = submitty_session_cookie['name'] +'='+ submitty_session_cookie['value'], header={"User-Agent": "python-socket-client"})
+        try:
+            self.ws = create_connection(address, cookie = submitty_session_cookie['name'] +'='+ submitty_session_cookie['value'], header={"User-Agent": "python-socket-client"})
+        except WebSocketBadStatusException as e:
+            traceback.print_exc()
+            print(e.status_message)
+            print(e.resp_headers)
+        except Exception:
+            traceback.print_exc()
+
         new_connection_msg = json.dumps({'type': 'new_connection', 'page': self.semester + '-sample-' + self.socket_page})
         self.ws.send(new_connection_msg)
 
