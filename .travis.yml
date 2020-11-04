@@ -289,9 +289,11 @@ jobs:
         - sudo service nginx restart
       script:
         - sleep 5
-        - tail -n 250 /var/log/apache2/error.log
-        - tail -n 250 /var/log/apache2/submitty.log
+        - sudo tail -n 250 /var/log/apache2/error.log
+        - sudo tail -n 250 /var/log/apache2/submitty.log
         - sudo systemctl status submitty_websocket_server
+        - sudo systemctl restart submitty_websocket_server
+        - sleep 5
         - echo "Authentication Method => $(sudo jq -r ".authentication_method" /usr/local/submitty/config/database.json)"
         - sudo systemctl status submitty_websocket_server
         - TEST_URL="http://localhost" python3 -m unittest discover -v --start-directory tests
