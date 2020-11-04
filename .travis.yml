@@ -286,10 +286,10 @@ jobs:
         - sudo cp -f .setup/nginx/submitty.conf /etc/nginx/sites-available/submitty.conf
         - sudo chmod 644 /etc/nginx/sites-available/submitty.conf
         - sudo ln -s /etc/nginx/sites-available/submitty.conf /etc/nginx/sites-enabled/submitty.conf
-        - mkdir /etc/systemd/system/nginx.service.d
+        - sudo mkdir /etc/systemd/system/nginx.service.d
         # Fixes an nginx race condition on low resource machines (https://stackoverflow.com/questions/51625890/failed-to-read-pid-from-file-run-nginx-pid-but-the-website-works-properly)
-        - printf "[Service]\nExecStartPost=/bin/sleep 0.1\n" > /etc/systemd/system/nginx.service.d/override.conf
-        - systemctl daemon-reload
+        - sudo printf "[Service]\nExecStartPost=/bin/sleep 0.1\n" > /etc/systemd/system/nginx.service.d/override.conf
+        - sudo systemctl daemon-reload
         - sudo service nginx restart
         - sudo service apache2 restart
         - sudo journalctl -u submitty_websocket_server.service
