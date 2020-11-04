@@ -280,19 +280,17 @@ jobs:
         - sudo bash -c 'echo "export PATH=$PATH" >> /etc/apache2/envvars'
         - cat /etc/apache2/sites-available/submitty.conf
         - sudo apache2ctl -t
-        - sudo systemctl status submitty_websocket_server
         - sudo service apache2 restart
-        - sudo systemctl status submitty_websocket_server
         - sudo rm -rf /etc/nginx/sites-available/*
         - sudo rm -rf /etc/nginx/sites-enabled/*
         - sudo cp -f .setup/nginx/submitty.conf /etc/nginx/sites-available/submitty.conf
         - sudo chmod 644 /etc/nginx/sites-available/submitty.conf
         - sudo ln -s /etc/nginx/sites-available/submitty.conf /etc/nginx/sites-enabled/submitty.conf
         - sudo service nginx restart
-        - sudo systemctl status submitty_websocket_server
       script:
-        - sudo systemctl status submitty_websocket_server
         - sleep 5
+        - tail -n 250 /var/log/apache2/error.log
+        - tail -n 250 /var/log/apache2/submitty.log
         - sudo systemctl status submitty_websocket_server
         - echo "Authentication Method => $(sudo jq -r ".authentication_method" /usr/local/submitty/config/database.json)"
         - sudo systemctl status submitty_websocket_server
