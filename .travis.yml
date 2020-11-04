@@ -261,37 +261,25 @@ jobs:
         - sudo systemctl status submitty_websocket_server
         - sudo python3 /usr/local/submitty/GIT_CHECKOUT/Submitty/.setup/bin/setup_sample_courses.py --no_submissions sample
         - sudo bash .setup/travis/setup_test_suite.sh
-        - sudo systemctl status submitty_websocket_server
         - sudo a2enmod include rewrite actions cgi alias headers suexec authnz_external headers proxy_fcgi proxy_http proxy_wstunnel
-        - sudo systemctl status submitty_websocket_server
         - echo "cgi.fix_pathinfo = 1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
         - cp .setup/php-fpm/pool.d/submitty.conf ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf
         - sudo mkdir -p /run/php
         - sudo chown www-data:www-data /run/php
-        - sudo systemctl status submitty_websocket_server
         - sudo chmod 755 /run/php
-        - sudo systemctl status submitty_websocket_server
         - sudo ~/.phpenv/versions/$(phpenv version-name)/sbin/php-fpm
-        - sudo systemctl status submitty_websocket_server
         - sudo a2dissite 000-default
-        - sudo systemctl status submitty_websocket_server
         - sudo rm -rf /etc/apache2/sites-available/*
-        - sudo systemctl status submitty_websocket_server
         - sudo rm -rf /etc/apache2/sites-enabled/*
-        - sudo systemctl status submitty_websocket_server
         - sudo cp -f .setup/apache/submitty.conf /etc/apache2/sites-available/submitty.conf
-        - sudo systemctl status submitty_websocket_server
         - sudo sed -e "s/Require host __your_domain__/Require all granted/g" --in-place /etc/apache2/sites-available/submitty.conf
         # - sudo sed '54d' --in-place /etc/apache2/sites-available/submitty.conf
-        - sudo systemctl status submitty_websocket_server
         - sudo cp .setup/apache/www-data /etc/apache2/suexec/www-data
         - sudo chmod 0640 /etc/apache2/suexec/www-data
         - sudo a2ensite submitty
         - sudo bash -c 'echo "export PATH=$PATH" >> /etc/apache2/envvars'
         - cat /etc/apache2/sites-available/submitty.conf
-        - sudo systemctl status submitty_websocket_server
         - sudo apache2ctl -t
-        - sudo systemctl status submitty_websocket_server
         - sudo service apache2 restart
         - sudo rm -rf /etc/nginx/sites-available/*
         - sudo rm -rf /etc/nginx/sites-enabled/*
@@ -300,7 +288,11 @@ jobs:
         - sudo ln -s /etc/nginx/sites-available/submitty.conf /etc/nginx/sites-enabled/submitty.conf
         - sudo service nginx restart
         - sudo service apache2 restart
+        - sudo journalctl -u submitty_websocket_server.service
+        - sudo journalctl -u apache2.service
+        - sudo journalctl -u nginx.service
         - sudo systemctl restart submitty_websocket_server
+        - sudo journalctl -u submitty_websocket_server.service
         - sudo ls -la /var/log/apache2
         - sudo tail -n 250 /var/log/apache2/error.log
         - sudo tail -n 250 /var/log/apache2/submitty.log
@@ -308,8 +300,10 @@ jobs:
         - sleep 5
         - sudo tail -n 250 /var/log/apache2/error.log
         - sudo tail -n 250 /var/log/apache2/submitty.log
+        - sudo journalctl -u submitty_websocket_server.service
         - sudo systemctl status submitty_websocket_server
         - sudo systemctl restart submitty_websocket_server
+        - sudo journalctl -u submitty_websocket_server.service
         - sleep 5
         - echo "Authentication Method => $(sudo jq -r ".authentication_method" /usr/local/submitty/config/database.json)"
         - sudo systemctl status submitty_websocket_server
