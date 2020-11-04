@@ -99,4 +99,11 @@ systemctl start submitty_autograding_shipper
 systemctl start submitty_autograding_worker
 systemctl start submitty_websocket_server
 
+ops=$(systemctl status submitty_websocket_server)
+echo "Status: $ops"
+
+sleep 5
+
+
+
 echo 'Finished setup.'
