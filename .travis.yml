@@ -258,6 +258,7 @@ jobs:
         - PGPASSWORD=submitty_dbuser psql -d postgres -h localhost -U submitty_dbuser -c "CREATE DATABASE submitty"
         - sudo bash .setup/travis/autograder.sh
         - sudo bash .setup/travis/setup.sh
+        - sudo systemctl status submitty_websocket_server
         - sudo python3 /usr/local/submitty/GIT_CHECKOUT/Submitty/.setup/bin/setup_sample_courses.py --no_submissions sample
         - sudo bash .setup/travis/setup_test_suite.sh
         - sudo a2enmod include rewrite actions cgi alias headers suexec authnz_external headers proxy_fcgi proxy_http proxy_wstunnel
@@ -289,7 +290,14 @@ jobs:
         - sudo service apache2 restart
         - sudo systemctl restart submitty_websocket_server
       script:
+        - sleep 5
+        - sudo tail -n 250 /var/log/apache2/error.log
+        - sudo tail -n 250 /var/log/apache2/submitty.log
+        - sudo systemctl status submitty_websocket_server
+        - sudo systemctl restart submitty_websocket_server
+        - sleep 5
         - echo "Authentication Method => $(sudo jq -r ".authentication_method" /usr/local/submitty/config/database.json)"
+        - sudo systemctl status submitty_websocket_server
         - TEST_URL="http://localhost" python3 -m unittest discover -v --start-directory tests
         - sudo sed -ie "s/Pam/Database/g" /usr/local/submitty/config/database.json
         - echo "Authentication Method => $(sudo jq -r ".authentication_method" /usr/local/submitty/config/database.json)"
