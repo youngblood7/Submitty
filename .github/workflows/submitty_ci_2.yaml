@@ -6,7 +6,7 @@ on:
 env:
   PGPASSWORD: submitty_dbuser
   SUBMITTY_INSTALL_DIR: /usr/local/submitty
-  SUBMITTY_REPOSITORY: .
+  SUBMITTY_REPOSITORY: /home/runner/work/Submitty/Submitty
   SUBMITTY_DATA_DIR: /var/local/submitty
 
 jobs:
@@ -78,9 +78,9 @@ jobs:
           POSTGRES_HOST: postgres
           POSTGRES_PORT: 5432
         run: |
-          echo $SUBMITTY_DATA_DIR
-          echo ${SUBMITTY_INSTALL_DIR}
-          pwd
+          export SUBMITTY_DATA_DIR=$SUBMITTY_DATA_DIR
+          export SUBMITTY_INSTALL_DIR=$SUBMITTY_INSTALL_DIR
+          export SUBMITTY_REPOSITORY=$SUBMITTY_REPOSITORY
           PGPASSWORD=${PGPASSWORD} psql -d postgresql://postgres@localhost/submitty -U postgres -c "CREATE ROLE submitty_dbuser WITH SUPERUSER CREATEDB CREATEROLE LOGIN PASSWORD 'submitty_dbuser'"
           sudo bash ./test_var.sh
           sudo bash .setup/testing/autograder.sh
