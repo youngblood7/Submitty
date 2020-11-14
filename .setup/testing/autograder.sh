@@ -100,15 +100,3 @@ chmod 444 TestRunner.class
 popd
 
 
-#################################################################
-# CLONE OR UPDATE THE HELPER SUBMITTY CODE REPOSITORIES
-#################
-
-SUBMITTY_INSTALL_DIR=$SUBMITTY_INSTALL_DIR SUBMITTY_REPOSITORY=$SUBMITTY_REPOSITORY SUBMITTY_DATA_DIR=$SUBMITTY_DATA_DIR \
-	/bin/bash ${SUBMITTY_REPOSITORY}/.setup/bin/update_repos.sh
-
-if [ $? -eq 1 ]; then
-    echo -n "\nERROR: FAILURE TO CLONE OR UPDATE SUBMITTY HELPER REPOSITORIES\n"
-    echo -n "Exiting autograder.sh"
-    exit 1
-fi
