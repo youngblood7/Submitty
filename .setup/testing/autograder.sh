@@ -6,7 +6,7 @@ if [[ "$UID" -ne "0" ]] ; then
     exit 1
 fi
 
-set -e
+#set -e
 
 mkdir -p ${SUBMITTY_INSTALL_DIR}
 mkdir -p ${SUBMITTY_DATA_DIR}
