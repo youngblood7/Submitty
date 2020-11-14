@@ -34,6 +34,7 @@ jobs:
           python3 -m pip install websocket_client
       - name: Cache PHP
         id: composer-cache
+      - name: Install Composer
         uses: actions/cache@v2
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
