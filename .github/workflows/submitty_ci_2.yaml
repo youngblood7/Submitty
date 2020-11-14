@@ -6,7 +6,7 @@ on:
 jobs:
   setup:
     env:
-      PGPASSWORD=submitty_dbuser
+      PGPASSWORD: submitty_dbuser
     runs-on: ubuntu-latest
     services:
       postgres:
