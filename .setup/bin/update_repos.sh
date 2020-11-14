@@ -99,5 +99,3 @@ clone_or_update_repo  RainbowGrades  ${RainbowGrades_Version}
 clone_or_update_repo  Tutorial  ${Tutorial_Version}
 clone_or_update_repo  SysadminTools  ${SysadminTools_Version}
 
-exit 0
-

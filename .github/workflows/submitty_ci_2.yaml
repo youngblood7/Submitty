@@ -82,7 +82,6 @@ jobs:
           export SUBMITTY_INSTALL_DIR=$SUBMITTY_INSTALL_DIR
           export SUBMITTY_REPOSITORY=$SUBMITTY_REPOSITORY
           PGPASSWORD=${PGPASSWORD} psql -d postgresql://postgres@localhost/submitty -U postgres -c "CREATE ROLE submitty_dbuser WITH SUPERUSER CREATEDB CREATEROLE LOGIN PASSWORD 'submitty_dbuser'"
-          sudo bash ./test_var.sh
           sudo bash .setup/testing/autograder.sh
           sudo bash .setup/testing/setup.sh
 

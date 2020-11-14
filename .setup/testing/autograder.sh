@@ -6,11 +6,7 @@ if [[ "$UID" -ne "0" ]] ; then
     exit 1
 fi
 
-set -ev
-
-SUBMITTY_INSTALL_DIR=/usr/local/submitty
-SUBMITTY_REPOSITORY=.
-SUBMITTY_DATA_DIR=/var/local/submitty
+set -e
 
 mkdir -p ${SUBMITTY_INSTALL_DIR}
 mkdir -p ${SUBMITTY_DATA_DIR}
@@ -108,7 +104,8 @@ popd
 # CLONE OR UPDATE THE HELPER SUBMITTY CODE REPOSITORIES
 #################
 
-/bin/bash ${SUBMITTY_REPOSITORY}/.setup/bin/update_repos.sh
+SUBMITTY_INSTALL_DIR=$SUBMITTY_INSTALL_DIR SUBMITTY_REPOSITORY=$SUBMITTY_REPOSITORY SUBMITTY_DATA_DIR=$SUBMITTY_DATA_DIR \
+	/bin/bash ${SUBMITTY_REPOSITORY}/.setup/bin/update_repos.sh
 
 if [ $? -eq 1 ]; then
     echo -n "\nERROR: FAILURE TO CLONE OR UPDATE SUBMITTY HELPER REPOSITORIES\n"
