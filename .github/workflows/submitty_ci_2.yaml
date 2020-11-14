@@ -78,6 +78,8 @@ jobs:
           POSTGRES_HOST: postgres
           POSTGRES_PORT: 5432
         run: |
+          cd ..
+          pwd
           PGPASSWORD=${PGPASSWORD} psql -d postgresql://postgres@localhost/submitty -U postgres -c "CREATE ROLE submitty_dbuser WITH SUPERUSER CREATEDB CREATEROLE LOGIN PASSWORD 'submitty_dbuser'"
           sudo bash .setup/testing/autograder.sh
           sudo bash .setup/testing/setup.sh
