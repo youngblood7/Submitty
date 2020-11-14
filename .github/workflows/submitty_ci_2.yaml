@@ -11,6 +11,9 @@ jobs:
       - uses: actions/setup-python@v2
         with: 
           python-version: '3.6'
+      - uses: shivammathur/setup-php@2.7.0
+        with:
+          extensions: imagick
       - name: Cache Pip
         uses: actions/cache@v2
         with:
@@ -29,7 +32,20 @@ jobs:
           python3 -m pip install jsonref
           python3 -m pip install docker
           python3 -m pip install websocket_client
+      - name: Cache PHP
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-php-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-php-composer-
+      - name: Install PHP dependencies
+        run: composer install --prefer-dist
       - name: Setup Submitty
         run: |
-          pwd
-          ls 
+          psql -U postgres -c "CREATE ROLE submitty_dbuser WITH SUPERUSER CREATEDB CREATEROLE LOGIN PASSWORD 'submitty_dbuser'"
+          PGPASSWORD=submitty_dbuser psql -d postgres -h localhost -U submitty_dbuser -c "CREATE DATABASE submitty"
+          bash .setup/testing/autograder.sh
+          bash .setup/testing/setup.sh
+
+          
