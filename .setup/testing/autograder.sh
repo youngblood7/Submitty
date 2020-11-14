@@ -7,7 +7,6 @@ if [[ "$UID" -ne "0" ]] ; then
 fi
 
 set -e
-env
 
 mkdir -p ${SUBMITTY_INSTALL_DIR}
 mkdir -p ${SUBMITTY_DATA_DIR}
