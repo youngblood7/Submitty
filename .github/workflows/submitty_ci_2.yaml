@@ -34,6 +34,7 @@ jobs:
           python3 -m pip install websocket_client
       - name: Cache PHP
         uses: actions/cache@v2
+        id: composer-cache
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ runner.os }}-php-composer-${{ hashFiles('**/composer.lock') }}
@@ -48,4 +49,3 @@ jobs:
           bash .setup/testing/autograder.sh
           bash .setup/testing/setup.sh
 
-          
