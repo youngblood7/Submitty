@@ -6,6 +6,22 @@ on:
 jobs:
   setup:
     runs-on: ubuntu-latest
+    #postgresql
+    container-job:
+      runs-on: ubuntu-latest
+      container: node:10.18-jessie
+      services:
+        postgres:
+          image: postgres
+          env:
+            POSTGRES_PASSWORD: postgres
+          options: >-
+            --health-cmd pg_isready
+            --health-interval 10s
+            --health-timeout 5s
+            --health-retries 5
+          ports:
+            - 5432: 5432
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
@@ -14,6 +30,7 @@ jobs:
       - uses: shivammathur/setup-php@2.7.0
         with:
           extensions: imagick
+
       - name: Cache Pip
         uses: actions/cache@v2
         with:
@@ -21,6 +38,7 @@ jobs:
           key: ${{ runner.os }}-py-pip-${{ hashFiles('**/requirements.txt') }}
           restore-keys: |
             ${{ runner.os }}-py-pip
+
       - name: Install Python dependencies
         run: |
           python3 -m pip install --upgrade pip
@@ -32,9 +50,13 @@ jobs:
           python3 -m pip install jsonref
           python3 -m pip install docker
           python3 -m pip install websocket_client
+
       - name: Cache PHP
         id: composer-cache
-        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+        run: |
+          poshd site
+          echo "::set-output name=dir::$(composer config cache-files-dir)"
+
       - name: Install Composer
         uses: actions/cache@v2
         with:
@@ -42,12 +64,16 @@ jobs:
           key: ${{ runner.os }}-php-composer-${{ hashFiles('**/composer.lock') }}
           restore-keys: |
             ${{ runner.os }}-php-composer-
+
       - name: Install PHP dependencies
         run: |
-          pushd site
           composer install --prefer-dist
           popd
+
       - name: Setup Submitty
+        env:
+          POSTGRES_HOST: postgres
+          POSTGRES_PORT: 5432
         run: |
           psql -U postgres -c "CREATE ROLE submitty_dbuser WITH SUPERUSER CREATEDB CREATEROLE LOGIN PASSWORD 'submitty_dbuser'"
           PGPASSWORD=submitty_dbuser psql -d postgres -h localhost -U submitty_dbuser -c "CREATE DATABASE submitty"
