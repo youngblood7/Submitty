@@ -8,6 +8,9 @@ env:
   SUBMITTY_INSTALL_DIR: /usr/local/submitty
   SUBMITTY_REPOSITORY: /home/runner/work/Submitty/Submitty
   SUBMITTY_DATA_DIR: /var/local/submitty
+  PHP_USER: submitty_php
+  PHP_GROUP: submitty_php
+  CGI_USER: submitty_cgi
 
 jobs:
   setup:

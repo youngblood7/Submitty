@@ -13,19 +13,12 @@ if [[ "$UID" -ne "0" ]] ; then
     exit 1
 fi
 
-# get the repository name from the location of this script
-MY_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
-SUBMITTY_REPOSITORY=${MY_PATH}/../..
-
-# FIXME: should read this from a config file
-SUBMITTY_INSTALL_DIR=/usr/local/submitty
 
 ########################################################################
 
 # These variables specify the minimum version necessary for
 # dependencies between versions.
-
-source ${MY_PATH}/versions.sh
+source versions.sh
 
 ########################################################################
 # Helper function requires 2 args, the short name of the repository,
