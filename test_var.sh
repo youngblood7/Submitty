@@ -1,3 +1,9 @@
+#!/usr/bin/env bash
+
 echo ${SUBMITTY_INSTALL_DIR}
 echo ${SUBMITTY_REPOSITORY}
 echo ${SUBMITTY_DATA_DIR}
+
+echo "$SUBMITTY_INSTALL_DIR"
+echo "$SUBMITTY_REPOSITORY"
+echo "$SUBMITTY_DATA_DIR"
