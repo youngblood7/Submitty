@@ -37,25 +37,25 @@ jobs:
         with:
           extensions: imagick
 
-      # - name: Cache Pip
-      #   uses: actions/cache@v2
-      #   with:
-      #     path: path ~/.cache/pip
-      #     key: ${{ runner.os }}-py-pip-${{ hashFiles('**/requirements.txt') }}
-      #     restore-keys: |
-      #       ${{ runner.os }}-py-pip
+      - name: Cache Pip
+        uses: actions/cache@v2
+        with:
+          path: path ~/.cache/pip
+          key: ${{ runner.os }}-py-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-py-pip
 
-      # - name: Install Python dependencies
-      #   run: |
-      #     python3 -m pip install --upgrade pip
-      #     python3 -m pip install python-pam
-      #     python3 -m pip install sqlalchemy
-      #     python3 -m pip install selenium
-      #     python3 -m pip install tzlocal
-      #     python3 -m pip install jsonschema
-      #     python3 -m pip install jsonref
-      #     python3 -m pip install docker
-      #     python3 -m pip install websocket_client
+      - name: Install Python dependencies
+        run: |
+          python3 -m pip install --upgrade pip
+          python3 -m pip install python-pam
+          python3 -m pip install sqlalchemy
+          python3 -m pip install selenium
+          python3 -m pip install tzlocal
+          python3 -m pip install jsonschema
+          python3 -m pip install jsonref
+          python3 -m pip install docker
+          python3 -m pip install websocket_client
 
       # - name: Cache PHP
       #   id: composer-cache
