@@ -14,12 +14,11 @@ account required pam_unix.so" > /etc/pam.d/httpd'
 sed -i '25s/^/\#/' /etc/pam.d/common-password
 sed -i '26s/pam_unix.so obscure use_authtok try_first_pass sha512/pam_unix.so obscure minlen=1 sha512/' /etc/pam.d/common-password
 
-echo 'in travis setup, going to make data dir ' ${SUBMITTY_DATA_DIR}
+echo 'in setup, going to make data dir ' ${SUBMITTY_DATA_DIR}
 
 mkdir -p ${SUBMITTY_INSTALL_DIR}
 mkdir -p ${SUBMITTY_DATA_DIR}/courses
 mkdir -p ${SUBMITTY_INSTALL_DIR}/GIT_CHECKOUT
-cp -R ${TRAVIS_BUILD_DIR} ${SUBMITTY_REPOSITORY}
 
 python3 ${DIR}/../bin/create_untrusted_users.py
 
@@ -39,10 +38,10 @@ adduser submitty_daemon submitty_daemoncgi
 adduser submitty_daemon docker
 useradd -p $(openssl passwd -1 submitty_dbuser) submitty_dbuser
 
-cp -R /home/travis/.composer /home/${PHP_USER}/.composer
-chown -R ${PHP_USER}:${PHP_USER} /home/${PHP_USER}/.composer
-cp -R /home/travis/.cache /home/${PHP_USER}/.cache
-chown -R ${PHP_USER}:${PHP_USER} /home/${PHP_USER}/.cache
+#cp -R /home/travis/.composer /home/${PHP_USER}/.composer
+#chown -R ${PHP_USER}:${PHP_USER} /home/${PHP_USER}/.composer
+#cp -R /home/travis/.cache /home/${PHP_USER}/.cache
+#chown -R ${PHP_USER}:${PHP_USER} /home/${PHP_USER}/.cache
 
 chown ${PHP_USER}:${PHP_GROUP} ${SUBMITTY_INSTALL_DIR}
 chown ${PHP_USER}:${PHP_GROUP} ${SUBMITTY_DATA_DIR}

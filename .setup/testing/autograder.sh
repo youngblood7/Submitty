@@ -63,7 +63,7 @@ chmod o+r . *.jar
 popd
 
 pushd ${SUBMITTY_INSTALL_DIR}/java_tools/hamcrest
-travis_retry wget https://maven-central.storage-download.googleapis.com/repos/central/data/org/hamcrest/hamcrest-core/${HAMCREST_VER}/hamcrest-core-${HAMCREST_VER}.jar
+wget https://maven-central.storage-download.googleapis.com/repos/central/data/org/hamcrest/hamcrest-core/${HAMCREST_VER}/hamcrest-core-${HAMCREST_VER}.jar
 chmod o+r . *.jar
 popd
 
@@ -71,7 +71,7 @@ popd
 echo "Getting JaCoCo..."
 JACOCO_VER=0.8.0
 pushd ${SUBMITTY_INSTALL_DIR}/java_tools/jacoco
-travis_retry wget https://github.com/jacoco/jacoco/releases/download/v${JACOCO_VER}/jacoco-${JACOCO_VER}.zip
+wget https://github.com/jacoco/jacoco/releases/download/v${JACOCO_VER}/jacoco-${JACOCO_VER}.zip
 mkdir jacoco-${JACOCO_VER}
 unzip jacoco-${JACOCO_VER}.zip -d jacoco-${JACOCO_VER} > /dev/null
 mv jacoco-${JACOCO_VER}/lib/jacococli.jar jacococli.jar
