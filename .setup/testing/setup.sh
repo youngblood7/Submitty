@@ -20,11 +20,14 @@ mkdir -p ${SUBMITTY_INSTALL_DIR}
 mkdir -p ${SUBMITTY_DATA_DIR}/courses
 mkdir -p ${SUBMITTY_INSTALL_DIR}/GIT_CHECKOUT
 
-python3 ${DIR}/../bin/create_untrusted_users.py
+python3 .setup/bin/create_untrusted_users.py
 
 addgroup submitty_daemonphp
 addgroup submitty_daemoncgi
 addgroup submitty_course_builders
+
+echo "> $PHP_USER $CGI_USER"
+
 adduser ${PHP_USER} --gecos "First Last,RoomNumber,WorkPhone,HomePhone" --disabled-password
 adduser ${CGI_USER} --gecos "First Last,RoomNumber,WorkPhone,HomePhone" --disabled-password
 adduser ${CGI_USER} ${PHP_GROUP}
