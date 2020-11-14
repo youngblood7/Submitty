@@ -50,7 +50,7 @@ jobs:
       - name: Cache PHP
         id: composer-cache
         run: |
-          pushd site
+          cd site
           echo "::set-output name=dir::$(composer config cache-files-dir)"
 
       - name: Install Composer
@@ -63,10 +63,8 @@ jobs:
 
       - name: Install PHP dependencies
         run: |
-          ls
-          pwd
+          cd site
           composer install --prefer-dist
-          popd
 
       - name: Setup Submitty
         env:
