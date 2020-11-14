@@ -43,7 +43,10 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-php-composer-
       - name: Install PHP dependencies
-        run: composer install --prefer-dist
+        run: |
+          pushd site
+          composer install --prefer-dist
+          popd
       - name: Setup Submitty
         run: |
           psql -U postgres -c "CREATE ROLE submitty_dbuser WITH SUPERUSER CREATEDB CREATEROLE LOGIN PASSWORD 'submitty_dbuser'"
