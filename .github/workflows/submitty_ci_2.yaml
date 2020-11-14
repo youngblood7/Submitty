@@ -3,10 +3,11 @@ name: Submitty CI-2
 on: 
   push:
 
+env:
+  PGPASSWORD: submitty_dbuser
+
 jobs:
   setup:
-    env:
-      PGPASSWORD: submitty_dbuser
     runs-on: ubuntu-latest
     services:
       postgres:
@@ -74,7 +75,7 @@ jobs:
           POSTGRES_HOST: postgres
           POSTGRES_PORT: 5432
         run: |
-          PGPASSWORD=${{PGPASSWORD}} psql -d postgresql://postgres@localhost/submitty -U postgres -c "CREATE ROLE submitty_dbuser WITH SUPERUSER CREATEDB CREATEROLE LOGIN PASSWORD 'submitty_dbuser'"
+          PGPASSWORD=${PGPASSWORD} psql -d postgresql://postgres@localhost/submitty -U postgres -c "CREATE ROLE submitty_dbuser WITH SUPERUSER CREATEDB CREATEROLE LOGIN PASSWORD 'submitty_dbuser'"
           bash .setup/testing/autograder.sh
           bash .setup/testing/setup.sh
 
