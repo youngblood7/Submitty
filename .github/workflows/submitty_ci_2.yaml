@@ -76,8 +76,8 @@ jobs:
       - name: Setup Submitty
         run: |
           PGPASSWORD=${PGPASSWORD} psql -d postgresql://postgres@localhost/submitty -U postgres -c "CREATE ROLE submitty_dbuser WITH SUPERUSER CREATEDB CREATEROLE LOGIN PASSWORD 'submitty_dbuser'"
-          sudo .setup/testing/autograder.sh
-          sudo .setup/testing/setup.sh
-          sudo .setup/bin/update_repos.sh
+          sudo ./.setup/testing/autograder.sh
+          sudo ./.setup/testing/setup.sh
+          sudo ./.setup/bin/update_repos.sh
 
 
