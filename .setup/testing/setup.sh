@@ -6,7 +6,7 @@ if [[ "$UID" -ne "0" ]] ; then
     exit 1
 fi
 
-set -ev
+set -e
 
 bash -c 'echo -e "#%PAM-1.0
 auth required pam_unix.so

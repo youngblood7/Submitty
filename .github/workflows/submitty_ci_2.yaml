@@ -5,6 +5,9 @@ on:
 
 env:
   PGPASSWORD: submitty_dbuser
+  SUBMITTY_DATA_DIR: /var/local/submitty
+  SUBMITTY_REPOSITORY: .
+  SUBMITTY_DATA_DIR: /var/local/submitty
 
 jobs:
   setup:
