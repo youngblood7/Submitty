@@ -6,7 +6,7 @@ on:
 env:
   PGPASSWORD: submitty_dbuser
   SUBMITTY_INSTALL_DIR: /usr/local/submitty
-  SUBMITTY_REPOSITORY: /home/runner/work/Submitty/Submitty
+  SUBMITTY_REPOSITORY: usr/local/submitty/GIT_CHECKOUT/Submitty
   SUBMITTY_DATA_DIR: /var/local/submitty
   PHP_USER: submitty_php
   PHP_GROUP: submitty_php
@@ -30,6 +30,8 @@ jobs:
           - 5432:5432
     steps:
       - uses: actions/checkout@v2
+        with:
+          path: /usr/local/submitty/GIT_CHECKOUT/Submitty
       - uses: actions/setup-python@v2
         with: 
           python-version: '3.6'
@@ -81,7 +83,6 @@ jobs:
           pwd
           PGPASSWORD=${PGPASSWORD} psql -d postgresql://postgres@localhost/submitty -U postgres -c "CREATE ROLE submitty_dbuser WITH SUPERUSER CREATEDB CREATEROLE LOGIN PASSWORD 'submitty_dbuser'"
           sudo -E env "PATH=$PATH" bash .setup/testing/autograder.sh
-          ls $SUBMITTY_INSTALL_DIR
           sudo -E env "PATH=$PATH" bash .setup/testing/setup.sh
           sudo -E env "PATH=$PATH" bash .setup/bin/update_repos.sh
           sudo -E env "PATH=$PATH" bash ${SUBMITTY_INSTALL_DIR}/.setup/INSTALL_SUBMITTY.sh clean
