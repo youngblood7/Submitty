@@ -32,10 +32,11 @@ if [ -d ${THIS_DIR}/../.vagrant ]; then
     VAGRANT=1
 fi
 
-SUBMITTY_REPOSITORY=$(jq -r '.submitty_repository' ${CONF_DIR}/submitty.json)
-SUBMITTY_INSTALL_DIR=$(jq -r '.submitty_install_dir' ${CONF_DIR}/submitty.json)
-
-source ${THIS_DIR}/bin/versions.sh
+if [ -z ${SUBMITTY_REPOSITORY} ] && [ -z ${SUBMITTY_INSTALL_DIR} ]; then
+    SUBMITTY_REPOSITORY=$(jq -r '.submitty_repository' ${CONF_DIR}/submitty.json)
+    SUBMITTY_INSTALL_DIR=$(jq -r '.submitty_install_dir' ${CONF_DIR}/submitty.json)
+    source ${THIS_DIR}/bin/versions.sh
+fi
 
 if [ ${WORKER} == 0 ]; then
     ALL_DAEMONS=( submitty_websocket_server submitty_autograding_shipper submitty_autograding_worker submitty_daemon_jobs_handler )
