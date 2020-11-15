@@ -75,12 +75,12 @@ bash -c "echo 'export PATH=${PATH}' >> /home/${DAEMON_USER}/.bashrc"
 bash -c "echo 'export PATH=${PATH}' >> /home/${DAEMON_USER}/.bashrc"
 
 # necessary to pass config path as submitty_repository is a symlink
-python3 ${SUBMITTY_REPOSITORY}/migration/run_migrator.py -e master -e system migrate --initial
+#python3 ${SUBMITTY_REPOSITORY}/migration/run_migrator.py -e master -e system migrate --initial
 
-bash ${SUBMITTY_INSTALL_DIR}/.setup/INSTALL_SUBMITTY.sh clean skip_web_restart
+#bash ${SUBMITTY_INSTALL_DIR}/.setup/INSTALL_SUBMITTY.sh clean skip_web_restart
 
-systemctl start submitty_autograding_shipper
-systemctl start submitty_autograding_worker
-systemctl start submitty_websocket_server
+#systemctl start submitty_autograding_shipper
+#systemctl start submitty_autograding_worker
+#systemctl start submitty_websocket_server
 
 echo 'Finished setup.'

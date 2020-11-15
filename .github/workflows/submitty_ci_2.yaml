@@ -84,5 +84,6 @@ jobs:
           ls $SUBMITTY_INSTALL_DIR
           sudo -E env "PATH=$PATH" bash .setup/testing/setup.sh
           sudo -E env "PATH=$PATH" bash .setup/bin/update_repos.sh
+          sudo -E env "PATH=$PATH" bash ${SUBMITTY_INSTALL_DIR}/.setup/INSTALL_SUBMITTY.sh clean
 
 
