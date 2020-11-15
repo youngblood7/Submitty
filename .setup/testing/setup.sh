@@ -19,9 +19,11 @@ echo 'in setup, going to make data dir ' ${SUBMITTY_DATA_DIR}
 mkdir -p ${SUBMITTY_INSTALL_DIR}
 mkdir -p ${SUBMITTY_DATA_DIR}/courses
 mkdir -p ${SUBMITTY_INSTALL_DIR}/GIT_CHECKOUT
-ln -s ${SUBMITTY_INSTALL_DIR}/GIT_CHECKOUT $SUBMITTY_REPOSITORY
+mkdir -p ${SUBMITTY_INSTALL_DIR}/GIT_CHECKOUT/Submitty
+ln -s ${SUBMITTY_INSTALL_DIR}/GIT_CHECKOUT/Submitty $SUBMITTY_REPOSITORY
 
 ls -la
+ls -la ${SUBMITTY_INSTALL_DIR}/GIT_CHECKOUT/Submitty
 
 python3 .setup/bin/create_untrusted_users.py
 
