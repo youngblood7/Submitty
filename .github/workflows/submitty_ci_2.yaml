@@ -80,10 +80,9 @@ jobs:
         run: |
           PGPASSWORD=${PGPASSWORD} psql -d postgres -h localhost -U postgres -c "CREATE ROLE submitty_dbuser WITH SUPERUSER CREATEDB CREATEROLE LOGIN PASSWORD 'submitty_dbuser'"
           PGPASSWORD=${PGPASSWORD} psql -d postgres -h localhost -U submitty_dbuser -c "CREATE DATABASE submitty"
-          psql -d postgres -h localhost -U submitty_dbuser -c "\list"
-          ls -l /var/run/
-          ls -l /var/run/postgresql/
           sudo -E env "PATH=$PATH" bash .setup/testing/autograder.sh
+          sudo systemctl status postgresql
+          ls -l /var/run/postgresql/
           sudo -E env "PATH=$PATH" bash .setup/testing/setup.sh
 
 

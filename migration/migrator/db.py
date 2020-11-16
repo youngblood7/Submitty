@@ -57,6 +57,7 @@ class Database:
         else:
             if params['database_driver'] == 'psql':
                 connection_string = 'postgresql+psycopg2://'
+                print("using psql ", connection_string)
             else:
                 raise RuntimeError(
                     'Invalid driver: {}'.format(params['database_driver'])
@@ -69,11 +70,13 @@ class Database:
                 f"{host}:{params.get('database_port', 5432)}" if not Path(host).exists() else '',
                 params['dbname']
             )
+            print("after ", connection_string)
 
             if Path(host).exists():
                 connection_string += '?host={}'.format(host)
 
-        return connection_string
+            print("final connection string")
+            return connection_string
 
     def execute(self, query):
         """
