@@ -10,7 +10,7 @@ CONF_DIR=${THIS_DIR}/../../../config
 if [-z $SUBMITTY_INSTALL_DIR ]; then
 	DEBUG_ENABLED=$(jq -r '.debugging_enabled' ${CONF_DIR}/database.json)
 else
-	DEBUG_ENABLED=$(jq -r '.debugging_enabled' ${SUBMITTY_INSTALL_DIR}/database.json)
+	DEBUG_ENABLED=$(jq -r '.debugging_enabled' ${SUBMITTY_INSTALL_DIR}/config/database.json)
 fi
 
 
