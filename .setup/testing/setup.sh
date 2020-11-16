@@ -19,11 +19,6 @@ echo 'in setup, going to make data dir ' ${SUBMITTY_DATA_DIR}
 mkdir -p ${SUBMITTY_INSTALL_DIR}
 mkdir -p ${SUBMITTY_DATA_DIR}/courses
 mkdir -p ${SUBMITTY_INSTALL_DIR}/GIT_CHECKOUT
-mkdir -p ${SUBMITTY_INSTALL_DIR}/GIT_CHECKOUT/Submitty
-ln -s ${SUBMITTY_INSTALL_DIR}/GIT_CHECKOUT/Submitty $SUBMITTY_REPOSITORY
-
-ls -la
-ls -la ${SUBMITTY_INSTALL_DIR}/GIT_CHECKOUT/Submitty
 
 python3 .setup/bin/create_untrusted_users.py
 
@@ -80,7 +75,7 @@ bash -c "echo 'export PATH=${PATH}' >> /home/${DAEMON_USER}/.bashrc"
 bash -c "echo 'export PATH=${PATH}' >> /home/${DAEMON_USER}/.bashrc"
 
 # necessary to pass config path as submitty_repository is a symlink
-#python3 ${SUBMITTY_REPOSITORY}/migration/run_migrator.py -e master -e system migrate --initial
+python3 ${SUBMITTY_REPOSITORY}/migration/run_migrator.py -e master -e system migrate --initial
 
 bash ${SUBMITTY_INSTALL_DIR}/.setup/INSTALL_SUBMITTY.sh clean skip_web_restart
 

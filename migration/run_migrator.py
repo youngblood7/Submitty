@@ -2,6 +2,7 @@
 from pathlib import Path
 import sys
 from migrator import cli
+import os
 
 if __name__ == '__main__':
     config_path = Path(Path(__file__).parent.resolve(), '..', '..', '..', 'config')

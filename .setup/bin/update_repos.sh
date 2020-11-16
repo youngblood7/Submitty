@@ -18,7 +18,7 @@ fi
 
 # These variables specify the minimum version necessary for
 # dependencies between versions.
-source versions.sh
+source bin/versions.sh
 
 ########################################################################
 # Helper function requires 2 args, the short name of the repository,
