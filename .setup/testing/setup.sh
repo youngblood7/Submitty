@@ -53,6 +53,7 @@ chmod -R 777 ${SUBMITTY_INSTALL_DIR}
 chmod -R 777 ${SUBMITTY_DATA_DIR}
 
 echo -e "localhost
+5432
 submitty_dbuser
 submitty_dbuser
 America/New_York
