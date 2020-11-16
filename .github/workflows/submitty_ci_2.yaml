@@ -56,6 +56,7 @@ jobs:
           python3 -m pip install jsonref
           python3 -m pip install docker
           python3 -m pip install websocket_client
+          python3 -m pip install psycopg2
 
       - name: Cache PHP
         id: composer-cache
