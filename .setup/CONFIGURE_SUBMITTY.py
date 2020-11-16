@@ -310,7 +310,7 @@ else:
             break
     print()
 
-
+    print("GOT HOSTNAME OF ", DATABASE_HOST)
 
 ##############################################################################
 # make the installation setup directory

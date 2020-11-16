@@ -52,7 +52,7 @@ chown ${PHP_USER}:${PHP_GROUP} ${SUBMITTY_DATA_DIR}
 chmod -R 777 ${SUBMITTY_INSTALL_DIR}
 chmod -R 777 ${SUBMITTY_DATA_DIR}
 
-echo -e "/var/run/postgresql
+echo -e "localhost
 submitty_dbuser
 submitty_dbuser
 America/New_York
