@@ -26,6 +26,7 @@ class Database:
             raise RuntimeError('Need to supply a driver')
         connection_string = Database.get_connection_string(params)
 
+        print("CONNECTION STRING ", connection_string)
         self.engine = create_engine(connection_string)
         self.engine.connect()
         self.inspector = reflection.Inspector.from_engine(self.engine)
