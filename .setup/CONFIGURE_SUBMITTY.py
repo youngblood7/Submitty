@@ -502,6 +502,7 @@ if not args.worker:
     print()
 
     print("fname -> ", DATABASE_JSON)
+    print(DATABASE_HOST)
 
     with open(DATABASE_JSON, 'w') as json_file:
         json.dump(config, json_file, indent=2)

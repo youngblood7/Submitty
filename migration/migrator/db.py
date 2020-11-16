@@ -71,6 +71,10 @@ class Database:
             )
             print("params: ")
             print(host, params['database_user'], params['database_password'], (f"{host}:{params.get('database_port', 5432)}" if not Path(host).exists() else ''), params['dbname'])
+
+            test_str = "postgresql+psycopg2://" + params['database_user'] + ":" + params['database_password'] + '@' + params.get('database_port', 5432) + '/' + params['dbname']
+            print("test_str ", test_str)
+
             print("after ", connection_string)
             print(host , " exists ", Path(host).exists())
             print("STR " , f"{host}:{params.get('database_port', 5432)}" if not Path(host).exists() else '')
