@@ -18,6 +18,8 @@ fi
 
 # These variables specify the minimum version necessary for
 # dependencies between versions.
+pwd
+ls -l
 source versions.sh
 echo $AnalysisTools_Version
 
@@ -33,6 +35,8 @@ function clone_or_update_repo {
     repo_dir=${parent_repo_dir}/${repo_name}
 
     echo "CLONE OR UPDATE ${repo_name}... "
+    echo "TARGET : "
+    echo $repo_dir
 
     if [ -d "${repo_dir}" ]; then
 
@@ -81,7 +85,11 @@ function clone_or_update_repo {
         git clone --branch ${min_repo_version} --depth 1 "https://github.com/Submitty/${repo_name}" 2> /dev/null
         popd > /dev/null
         echo -e "    automatically cloned version ${min_repo_version}\n"
-
+        pwd
+        ls -l
+        ls $SUBMITTY_REPOSITORY
+        echo "par"
+        ls $SUBMITTY_REPOSITORY/..
     fi
 }
 
