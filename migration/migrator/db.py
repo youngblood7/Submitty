@@ -24,6 +24,8 @@ class Database:
         self.DynamicBase = declarative_base(class_registry=dict())
         if 'database_driver' not in params:
             raise RuntimeError('Need to supply a driver')
+
+        print(params)
         connection_string = Database.get_connection_string(params)
 
         print("CONNECTION STRING ", connection_string)
