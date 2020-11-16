@@ -20,6 +20,10 @@ mkdir -p ${SUBMITTY_INSTALL_DIR}
 mkdir -p ${SUBMITTY_DATA_DIR}/courses
 mkdir -p ${SUBMITTY_INSTALL_DIR}/GIT_CHECKOUT
 
+# /usr/local/submitty/GIT_CHECKOUT -> /home/runner/work/Submitty/Submitty
+ln -s ${SUBMITTY_REPOSITORY} ${SUBMITTY_INSTALL_DIR}/GIT_CHECKOUT
+ls -lah ${SUBMITTY_INSTALL_DIR}/GIT_CHECKOUT
+
 python3 .setup/bin/create_untrusted_users.py
 
 addgroup submitty_daemonphp
