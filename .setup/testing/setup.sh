@@ -6,7 +6,7 @@ if [[ "$UID" -ne "0" ]] ; then
     exit 1
 fi
 
-set -e
+set -ev
 
 bash -c 'echo -e "#%PAM-1.0
 auth required pam_unix.so
@@ -22,6 +22,7 @@ mkdir -p ${SUBMITTY_INSTALL_DIR}/GIT_CHECKOUT
 
 # /usr/local/submitty/GIT_CHECKOUT -> /home/runner/work/Submitty/Submitty
 ln -s ${SUBMITTY_REPOSITORY} ${SUBMITTY_INSTALL_DIR}/GIT_CHECKOUT
+
 ls -lah ${SUBMITTY_INSTALL_DIR}/GIT_CHECKOUT
 
 python3 .setup/bin/create_untrusted_users.py
