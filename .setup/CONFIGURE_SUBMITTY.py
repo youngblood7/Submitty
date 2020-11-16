@@ -62,6 +62,8 @@ SUBMITTY_REPOSITORY = os.path.dirname(SETUP_SCRIPT_DIRECTORY)
 # recommended (default) directory locations
 # FIXME: Check that directories exist and are readable/writeable?
 SUBMITTY_INSTALL_DIR = args.install_dir
+print("WRITING TO :")
+print(SUBMITTY_INSTALL_DIR)
 if not os.path.isdir(SUBMITTY_INSTALL_DIR) or not os.access(SUBMITTY_INSTALL_DIR, os.R_OK | os.W_OK):
     raise SystemExit('Install directory {} does not exist or is not accessible'.format(SUBMITTY_INSTALL_DIR))
 
@@ -495,6 +497,11 @@ if not args.worker:
     config['database_user'] = DATABASE_USER
     config['database_password'] = DATABASE_PASS
     config['debugging_enabled'] = DEBUGGING_ENABLED
+
+    print("WRITING DATABASE FILE")
+    print()
+
+    print("fname -> ", DATABASE_JSON)
 
     with open(DATABASE_JSON, 'w') as json_file:
         json.dump(config, json_file, indent=2)
