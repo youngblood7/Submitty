@@ -72,7 +72,7 @@ do-not-reply@vagrant
 localhost
 25" | python3 ${SUBMITTY_REPOSITORY}/.setup/CONFIGURE_SUBMITTY.py --debug
 
-ls -lah $SUBMITTY_INSTALL_DIR
+ls -lah $SUBMITTY_INSTALL_DIR/config
 pwd
 
 bash -c "echo 'export PATH=${PATH}' >> /home/${PHP_USER}/.profile"
@@ -81,7 +81,7 @@ bash -c "echo 'export PATH=${PATH}' >> /home/${DAEMON_USER}/.bashrc"
 bash -c "echo 'export PATH=${PATH}' >> /home/${DAEMON_USER}/.bashrc"
 
 # necessary to pass config path as submitty_repository is a symlink
-python3 ${SUBMITTY_REPOSITORY}/migration/run_migrator.py -c ${SUBMITTY_INSTALL_DIR} -e master -e system migrate --initial
+python3 ${SUBMITTY_REPOSITORY}/migration/run_migrator.py -c ${SUBMITTY_INSTALL_DIR}/config -e master -e system migrate --initial
 
 bash ${SUBMITTY_INSTALL_DIR}/.setup/INSTALL_SUBMITTY.sh clean skip_web_restart
 
