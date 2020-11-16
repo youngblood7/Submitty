@@ -37,7 +37,7 @@ if [ -z ${SUBMITTY_REPOSITORY} ] && [ -z ${SUBMITTY_INSTALL_DIR} ]; then
     SUBMITTY_INSTALL_DIR=$(jq -r '.submitty_install_dir' ${CONF_DIR}/submitty.json)
     source ${THIS_DIR}/bin/versions.sh
 else
-    source $SUBMITTY_REPOSITORY/.setup/bin/versions
+    source $SUBMITTY_REPOSITORY/.setup/bin/versions.sh
     echo $AnalysisTools_Version
 fi
 
