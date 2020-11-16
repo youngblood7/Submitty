@@ -70,6 +70,8 @@ class Database:
                 params['dbname']
             )
             print("after ", connection_string)
+            print(host , " exists ", Path(host).exists())
+            print("STR " , f"{host}:{params.get('database_port', 5432)}" if not Path(host).exists() else '')
 
             if Path(host).exists():
                 connection_string += '?host={}'.format(host)
