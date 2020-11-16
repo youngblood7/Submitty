@@ -30,59 +30,56 @@ jobs:
           - 5432:5432
     steps:
       - uses: actions/checkout@v2
-      # - uses: actions/setup-python@v2
-      #   with: 
-      #     python-version: '3.6'
-      # - uses: shivammathur/setup-php@2.7.0
-      #   with:
-      #     extensions: imagick
+      - uses: actions/setup-python@v2
+        with: 
+          python-version: '3.6'
+      - uses: shivammathur/setup-php@2.7.0
+        with:
+          extensions: imagick
 
-      # - name: Cache Pip
-      #   uses: actions/cache@v2
-      #   with:
-      #     path: path ~/.cache/pip
-      #     key: ${{ runner.os }}-py-pip-${{ hashFiles('**/requirements.txt') }}
-      #     restore-keys: |
-      #       ${{ runner.os }}-py-pip
+      - name: Cache Pip
+        uses: actions/cache@v2
+        with:
+          path: path ~/.cache/pip
+          key: ${{ runner.os }}-py-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-py-pip
 
-      # - name: Install Python dependencies
-      #   run: |
-      #     python3 -m pip install --upgrade pip
-      #     python3 -m pip install python-pam
-      #     python3 -m pip install sqlalchemy
-      #     python3 -m pip install selenium
-      #     python3 -m pip install tzlocal
-      #     python3 -m pip install jsonschema
-      #     python3 -m pip install jsonref
-      #     python3 -m pip install docker
-      #     python3 -m pip install websocket_client
+      - name: Install Python dependencies
+        run: |
+          python3 -m pip install --upgrade pip
+          python3 -m pip install python-pam
+          python3 -m pip install sqlalchemy
+          python3 -m pip install selenium
+          python3 -m pip install tzlocal
+          python3 -m pip install jsonschema
+          python3 -m pip install jsonref
+          python3 -m pip install docker
+          python3 -m pip install websocket_client
 
-      # - name: Cache PHP
-      #   id: composer-cache
-      #   run: |
-      #     cd site
-      #     echo "::set-output name=dir::$(composer config cache-files-dir)"
+      - name: Cache PHP
+        id: composer-cache
+        run: |
+          cd site
+          echo "::set-output name=dir::$(composer config cache-files-dir)"
 
-      # - name: Install Composer
-      #   uses: actions/cache@v2
-      #   with:
-      #     path: ${{ steps.composer-cache.outputs.dir }}
-      #     key: ${{ runner.os }}-php-composer-${{ hashFiles('**/composer.lock') }}
-      #     restore-keys: |
-      #       ${{ runner.os }}-php-composer-
+      - name: Install Composer
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-php-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-php-composer-
 
-      # - name: Install PHP dependencies
-      #   run: |
-      #     cd site
-      #     composer install --prefer-dist
+      - name: Install PHP dependencies
+        run: |
+          cd site
+          composer install --prefer-dist
 
       - name: Setup Submitty
         run: |
           PGPASSWORD=${PGPASSWORD} psql -d postgresql://postgres@localhost/submitty -U postgres -c "CREATE ROLE submitty_dbuser WITH SUPERUSER CREATEDB CREATEROLE LOGIN PASSWORD 'submitty_dbuser'"
-          ls 
-          ls .setup
-          pwd
-          sudo -E env "PATH=$PATH" bash .setup/testing/autograding.sh
+          sudo -E env "PATH=$PATH" bash .setup/testing/autograder.sh
           sudo -E env "PATH=$PATH" bash .setup/testing/setup.sh
 
 
