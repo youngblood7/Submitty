@@ -69,6 +69,8 @@ class Database:
                 f"{host}:{params.get('database_port', 5432)}" if not Path(host).exists() else '',
                 params['dbname']
             )
+            print("params: ")
+            print(host, params['database_user'], params['database_password'], (f"{host}:{params.get('database_port', 5432)}" if not Path(host).exists() else ''), params['dbname'])
             print("after ", connection_string)
             print(host , " exists ", Path(host).exists())
             print("STR " , f"{host}:{params.get('database_port', 5432)}" if not Path(host).exists() else '')
@@ -76,7 +78,7 @@ class Database:
             if Path(host).exists():
                 connection_string += '?host={}'.format(host)
 
-            print("final connection string")
+            print("final connection string ", connection_string)
             return connection_string
 
     def execute(self, query):
