@@ -20,7 +20,6 @@ jobs:
         image: postgres
         env:
           POSTGRES_PASSWORD: submitty_dbuser
-          POSTGRES_DB: submitty
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -79,7 +78,8 @@ jobs:
 
       - name: Setup Submitty
         run: |
-          PGPASSWORD=${PGPASSWORD} psql -d postgresql://postgres@localhost/submitty -U postgres -c "CREATE ROLE submitty_dbuser WITH SUPERUSER CREATEDB CREATEROLE LOGIN PASSWORD 'submitty_dbuser'"
+          PGPASSWORD=${PGPASSWORD} psql -d postgres -h localhost -U postgres -c "CREATE ROLE submitty_dbuser WITH SUPERUSER CREATEDB CREATEROLE LOGIN PASSWORD 'submitty_dbuser'"
+          PGPASSWORD=${PGPASSWORD} psql -d postgres -h localhost -U submitty_dbuser -c "CREATE DATABASE submitty"
           psql -d postgres -h localhost -U submitty_dbuser -c "\list"
           sudo -E env "PATH=$PATH" bash .setup/testing/autograder.sh
           sudo -E env "PATH=$PATH" bash .setup/testing/setup.sh
