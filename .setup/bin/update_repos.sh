@@ -19,6 +19,7 @@ fi
 # These variables specify the minimum version necessary for
 # dependencies between versions.
 source versions.sh
+echo $AnalysisTools_Version
 
 ########################################################################
 # Helper function requires 2 args, the short name of the repository,
@@ -87,6 +88,7 @@ function clone_or_update_repo {
 ########################################################################
 
 clone_or_update_repo  AnalysisTools  ${AnalysisTools_Version}
+ls $SUBMITTY_INSTALL_DIR/GIT_CHECKOUT/
 clone_or_update_repo  Lichen  ${Lichen_Version}
 clone_or_update_repo  RainbowGrades  ${RainbowGrades_Version}
 clone_or_update_repo  Tutorial  ${Tutorial_Version}
