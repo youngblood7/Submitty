@@ -111,3 +111,8 @@ function rowsToPixels(rows) {
     // 17 looks good on Mac Chrome & Mac Safari
     return rows * 17;
 }
+
+function getCodeMirrorTheme() {
+    const theme = getTheme();
+    return (theme == null || theme === "light") ? "eclipse" : "monokai";
+}

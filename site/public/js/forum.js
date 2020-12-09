@@ -1125,8 +1125,7 @@ function generateCodeMirrorBlocks(container_element) {
             var h = (editor0.defaultTextHeight()) * lineCount + 15;
             editor0.setSize("100%", (h > 500 ? 500 : h) + "px");
         }
-
-        editor0.setOption("theme", "eclipse");
+        editor0.setOption("theme", getCodeMirrorTheme());
         editor0.refresh();
 
     }

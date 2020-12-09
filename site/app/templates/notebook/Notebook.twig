@@ -65,7 +65,7 @@
                 <script>
                     const config_{{ num_codeboxes }} = {};
 
-                    config_{{ num_codeboxes }}.theme = 'eclipse';
+                    config_{{ num_codeboxes }}.theme = getCodeMirrorTheme();
 
                     if ('{{ cell.programming_language }}') {
                         config_{{ num_codeboxes }}.lineNumbers = true;

@@ -140,6 +140,9 @@ function setUpPlagView(gradeable_id) {
     editor0.setSize("100%", "100%");
     editor1.setSize("100%", "100%");
 
+    editor0.setOption("theme", getCodeMirrorTheme());
+    editor1.setOption("theme", getCodeMirrorTheme());
+
     $('[name="user_id_1"]', form).change(function(){
         setCodeInEditor('user_id_1');
     });

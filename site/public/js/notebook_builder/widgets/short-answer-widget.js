@@ -80,7 +80,7 @@ class ShortAnswerWidget extends Widget {
 
             const codebox_config = {
                 value: this.state.initial_value ? this.state.initial_value : '',
-                theme: 'eclipse',
+                theme: getCodeMirrorTheme(),
                 lineWrapping: answer_type_selector.value === 'Default' && this.state.rows
             };
 
