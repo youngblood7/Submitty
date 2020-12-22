@@ -5,6 +5,7 @@ namespace app\views\forum;
 use app\libraries\DateUtils;
 use app\views\AbstractView;
 use app\libraries\FileUtils;
+use app\libraries\CodeMirrorUtils;
 
 class ForumThreadView extends AbstractView {
 
@@ -159,13 +160,8 @@ class ForumThreadView extends AbstractView {
             $this->core->getOutput()->addBreadcrumb("Discussion Forum", $this->core->buildCourseUrl(['forum']), null, $use_as_heading = true);
 
             //Body Style is necessary to make sure that the forum is still readable...
-            $this->core->getOutput()->addVendorCss('codemirror/codemirror.css');
-            $this->core->getOutput()->addVendorCss('codemirror/theme/eclipse.css');
+            CodeMirrorUtils::loadDefaultDependencies($this->core);
             $this->core->getOutput()->addInternalCss('forum.css');
-            $this->core->getOutput()->addVendorJs('codemirror/codemirror.js');
-            $this->core->getOutput()->addVendorJs('codemirror/mode/clike/clike.js');
-            $this->core->getOutput()->addVendorJs('codemirror/mode/python/python.js');
-            $this->core->getOutput()->addVendorJs('codemirror/mode/shell/shell.js');
             $this->core->getOutput()->addInternalJs('drag-and-drop.js');
             $this->core->getOutput()->addInternalJs('autosave-utils.js');
             $this->core->getOutput()->addInternalJs('websocket.js');
