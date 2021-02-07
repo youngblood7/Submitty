@@ -100,7 +100,7 @@ jobs:
               pushd ${SUBMITTY_INSTALL_DIR}/GIT_CHECKOUT/Submitty/site
               composer install --prefer-dist
               popd
-           - name: Install Submitty Python Utils
+          - name: Install Submitty Python Utils
             run: |
               export SUBMITTY_INSTALL_DIR=/usr/local/submitty 
               export SUBMITTY_REPOSITORY=${SUBMITTY_INSTALL_DIR}/GIT_CHECKOUT/Submitty
