@@ -15,6 +15,25 @@ env:
 
 
 jobs:
+
+    screenshot:
+        runs-on: ubuntu-latest
+        steps:
+          - uses: actions/checkout@v2
+          - name: Setup
+            run : |
+              cd site
+              npm install
+              
+          - name: Cypress Run
+            uses: cypress-io/github-action@v2.7.0
+            with:
+              working-directory: site
+          - uses: actions/upload-artifact@v1
+            with:
+              name: screenshots
+              path: cypress/screenshots
+
     e2e:
         runs-on: ubuntu-latest
         services:
