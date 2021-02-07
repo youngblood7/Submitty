@@ -57,13 +57,17 @@ jobs:
               restore-keys: |
                 ${{ runner.os }}-py-pip
           - uses: nanasess/setup-chromedriver@master
+          - name: Install apt packages
+            run: |
+              sudo apt-get upgrade
+              sudo apt-get install build-essential libssl-dev libffi-dev
           - name: Install Python dependencies
             run: |
               python3 -m pip install --upgrade pip setuptools wheel  
               sudo python3 -m pip install --upgrade pip setuptools wheel
-              curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-              pip3 -v
-              sudo pip3 -v
+              pip3 -V
+              sudo pip3 -V
+              pip3 install cryptography
               pip3 install python-pam
               pip3 install sqlalchemy
               pip3 install selenium
