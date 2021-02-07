@@ -183,7 +183,7 @@ jobs:
           - uses: actions/upload-artifact@v2
             with:
               name: screenshots
-              path: ${SUBMITTY_INSTALL_DIR}/GIT_CHECKOUT/Submitty/site/cypress/screenshots/
+              path: "/usr/local/submitty/GIT_CHECKOUT/Submitty/site/cypress/screenshots/testing/screenshot.spec.js/screen shot -- test.png" 
 
           - name: Debug
             continue-on-error: true
