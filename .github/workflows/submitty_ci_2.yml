@@ -15,16 +15,6 @@ env:
 
 
 jobs:
-
-    screenshot:
-        runs-on: ubuntu-latest
-        name: e2e
-        steps:
-          - uses: actions/checkout@v2
-            run: |
-              npm install
-              npx cypress run
-
     e2e:
         runs-on: ubuntu-latest
         services:
@@ -141,6 +131,9 @@ jobs:
               sudo -H pip3 install .
               sudo pip3 show submitty_utils
               popd
+          - name: Install cypress dependencies
+            run: |
+              sudo apt-get install libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xauth xvfb
           - name: Setup website
             run: |
               export SUBMITTY_INSTALL_DIR=/usr/local/submitty 
@@ -175,6 +168,15 @@ jobs:
               sudo chmod 644 /etc/nginx/sites-available/submitty.conf
               sudo ln -s /etc/nginx/sites-available/submitty.conf /etc/nginx/sites-enabled/submitty.conf
               sudo service nginx restart
+          - name: Run cypress
+            run: |
+              pushd ${SUBMITTY_INSTALL_DIR}/GIT_CHECKOUT/Submitty/site
+              npx cypress run
+          - uses: actions/upload-artifact@v2
+            with:
+              name: screenshots
+              path: ${SUBMITTY_INSTALL_DIR}/GIT_CHECKOUT/Submitty/site/cypress/screenshots/
+
           - name: Debug
             continue-on-error: true
             run: |
