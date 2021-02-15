@@ -190,11 +190,11 @@ jobs:
               sudo chmod 644 /etc/nginx/sites-available/submitty.conf
               sudo ln -s /etc/nginx/sites-available/submitty.conf /etc/nginx/sites-enabled/submitty.conf
               sudo service nginx restart
-              sudo systemctl restart submitty_autograding_worker
-              sudo systemctl restart submitty_autograding_shipper
           - uses: nanasess/setup-chromedriver@master
           - name: Run tests
             run: |
+              sudo systemctl restart submitty_autograding_worker
+              sudo systemctl restart submitty_autograding_shipper
               export DISPLAY=:99
               chromedriver --url-base=/wd/hub &
               sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 & # optional
@@ -205,6 +205,19 @@ jobs:
               echo "Authentication Method => $(sudo jq -r ".authentication_method" /usr/local/submitty/config/database.json)"
               TEST_URL="http://localhost" python3 -m unittest discover -v --start-directory tests
               sudo bash tests/test_site_error_log.sh
+          - name: debug7
+            continue-on-error: true
+            run: |
+              sudo ls -lah /var/local/submitty/logs/autograding_stack_traces
+              sudo cat /var/local/submitty/logs/autograding_stack_traces/*
+          - name: debug8
+            continue-on-error: true
+            run: |
+              sudo ls -lah /var/local/submitty/logs/autograding
+              sudo cat /var/local/submitty/logs/autograding/*
+          - name: debug9
+            run: |
+              sudo journalctl -u submitty_autograding_worker 
 
 
       
