@@ -32,8 +32,8 @@ if [ -d ${THIS_DIR}/../.vagrant ]; then
     VAGRANT=1
 fi
 
-SUBMITTY_REPOSITORY=$(jq -r '.submitty_repository' ${CONF_DIR}/submitty.json)
-SUBMITTY_INSTALL_DIR=$(jq -r '.submitty_install_dir' ${CONF_DIR}/submitty.json)
+#SUBMITTY_REPOSITORY=$(jq -r '.submitty_repository' ${CONF_DIR}/submitty.json)
+#SUBMITTY_INSTALL_DIR=$(jq -r '.submitty_install_dir' ${CONF_DIR}/submitty.json)
 
 source ${THIS_DIR}/bin/versions.sh
 
