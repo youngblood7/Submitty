@@ -184,6 +184,8 @@ jobs:
               sudo chmod 644 /etc/nginx/sites-available/submitty.conf
               sudo ln -s /etc/nginx/sites-available/submitty.conf /etc/nginx/sites-enabled/submitty.conf
               sudo service nginx restart
+              sudo systemctl restart submitty_autograding_worker
+              sudo systemctl restart submitty_autograding_shipper
               sudo bash tests/test_site_error_log.sh
           - name: Integration Tests
             run : |
