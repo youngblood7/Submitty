@@ -15,4 +15,23 @@ jobs:
         python3 -m pip install --upgrade pip setuptools wheel  
     - name: run bootstrap script
       run: |
-        echo -ne '\n\n\n\n\n\n\n\n\n\n1\n\n\n' | sudo bash -c "$(curl -s https://raw.githubusercontent.com/Submitty/Submitty/master/.setup/bootstrap.sh)"
+        echo -e "localhost
+          5432
+          submitty_dbuser
+          submitty_dbuser
+          America/New_York
+          http://localhost
+
+
+          sysadmin@example.com
+          https://example.com
+          ${AUTH_METHOD}
+
+
+          y
+
+
+          submitty@vagrant
+          do-not-reply@vagrant
+          localhost
+          25" | sudo bash -c "$(curl -s https://raw.githubusercontent.com/Submitty/Submitty/master/.setup/bootstrap.sh)"
