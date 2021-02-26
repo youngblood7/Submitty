@@ -9,4 +9,4 @@ jobs:
     steps:
     - name: run bootstrap script
       run: |
-        echo -ne '\n\n\n\n\n\n\n\n' | sudo bash -c "$(curl -s https://raw.githubusercontent.com/Submitty/Submitty/master/.setup/bootstrap.sh)"
+        echo -ne '\n\n\n\n\n\n\n\n\n\n1\n\n' | sudo bash -c "$(curl -s https://raw.githubusercontent.com/Submitty/Submitty/master/.setup/bootstrap.sh)"
