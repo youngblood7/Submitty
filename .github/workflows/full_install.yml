@@ -7,6 +7,12 @@ jobs:
   install:
     runs-on: ubuntu-18.04
     steps:
+    - uses: actions/setup-python@v2
+      with:
+        python-version: '3.6'
+    - name: Install
+      run: |
+        python3 -m pip install --upgrade pip setuptools wheel  
     - name: run bootstrap script
       run: |
         echo -ne '\n\n\n\n\n\n\n\n\n\n1\n\n' | sudo bash -c "$(curl -s https://raw.githubusercontent.com/Submitty/Submitty/master/.setup/bootstrap.sh)"
