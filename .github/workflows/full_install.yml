@@ -6,6 +6,20 @@ on:
 jobs:
   install:
     runs-on: ubuntu-18.04
+    services:
+      postgres:
+        image: postgres
+        env: 
+          POSTGRES_PASSWORD: submitty_dbuser
+          POSTGRES_USER: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
     steps:
     - uses: actions/setup-python@v2
       with:
@@ -22,7 +36,7 @@ jobs:
 
           sysadmin@example.com
           https://example.com
-          ${AUTH_METHOD}
+          1
 
 
           y
