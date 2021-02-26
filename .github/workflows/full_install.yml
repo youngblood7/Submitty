@@ -3,11 +3,10 @@ name: full_install
 on:
   [push]
 
-
 jobs:
   install:
     runs-on: ubuntu-18.04
     steps:
     - name: run bootstrap script
       run: |
-        sudo bash -c "$(curl -s https://raw.githubusercontent.com/Submitty/Submitty/master/.setup/bootstrap.sh)"
+        echo -ne '\n\n\n\n\n\n\n\n' | sudo bash -c "$(curl -s https://raw.githubusercontent.com/Submitty/Submitty/master/.setup/bootstrap.sh)"
